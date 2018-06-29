@@ -1,0 +1,4 @@
+{
+  "SERVER_URI": "http://localhost:8000/api",
+  "DEFAULT_PRODUCT_QUANTITY": 1
+}

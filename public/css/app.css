@@ -1,0 +1,72 @@
+.container {
+    margin: 0;
+    overflow: hidden;
+    width: 100%;
+}
+a:hover {
+    cursor: pointer;
+}
+
+.form-group select {
+    width: 200px
+}
+
+input#discount {
+    width: 70px
+}
+
+.btn {
+    margin: 5px
+}
+
+.invoices-list {
+    float: left;
+    width: 50%;
+}
+
+.invoices-table > tbody > tr > td,
+.items-table > tbody > tr > td {
+    vertical-align: middle;
+}
+
+.invoice-edit {
+    float: right;
+    width: 47%;
+}
+
+.invoice-actions {
+    text-align: right;
+}
+
+.form-group label,
+.form-group select,
+.form-group input {
+    display: inline-block;
+    margin: 5px;
+}
+
+.discount-container {
+    float: right;
+    margin-top: 20px;
+}
+
+input.product-quantity {
+    width: 50px
+}
+
+td.product-name {
+    width: 60%
+}
+
+.discount-container div {
+    margin: 20px;
+}
+
+.total {
+    margin-left: 35px;
+    font-size: large;
+}
+
+.active {
+    color: #5bc0de;
+}
