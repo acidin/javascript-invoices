@@ -76,7 +76,9 @@ InvoiceItem = sequelize.define('invoice_items', {
   }
 });
 
-sequelize.sync().then(function() {
+sequelize.sync({
+    force: true
+}).then(function() {
   Customer.create({
     name: "Mark Benson",
     address: "353 Rochester St, Rialto FL 43250",
@@ -127,7 +129,9 @@ sequelize.sync().then(function() {
 var app = module.exports = express();
 app.set('port', process.env.PORT || 8000);
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded());
+app.use(bodyParser.urlencoded({
+    extended: true
+}));
 app.use(express.static(path.join(__dirname, 'public')));
 
 // CUSTOMERS API
