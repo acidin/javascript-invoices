@@ -24,11 +24,6 @@ const InvoicesReducer = (state = INIT_STATE, action) => {
                 invoices: state.invoices.filter(
                     (invoice) => invoice.id !== action.payload.id)
             };
-        case types.FETCH_CUSTOMERS_SUCCESSFUL:
-            return {
-                ...state,
-                customers: action.payload
-            };
     }
 
     return state;

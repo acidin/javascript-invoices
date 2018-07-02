@@ -13,11 +13,6 @@ const INIT_STATE = {
 
 const InvoiceDetailsReducer = (state = INIT_STATE, action) => {
     switch (action.type) {
-        case types.FETCH_CUSTOMERS_SUCCESSFUL:
-            return {
-                ...state,
-                customers: Object.values(action.payload)
-            };
         case types.FETCH_PRODUCTS_SUCCESSFUL:
             return {
                 ...state,

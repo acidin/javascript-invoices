@@ -3,7 +3,6 @@ import {connect} from 'react-redux';
 import {
     fetchInvoicesList,
     deleteInvoice,
-    fetchCustomersList,
     fetchInvoiceDetails,
     fetchInvoiceItems,
     setInvoiceActive,
@@ -11,6 +10,11 @@ import {
     clearInvoiceDetailsFetchData
 } from '../actions';
 import InvoiceDetails from './InvoiceDetails';
+import { ApolloProvider, Query } from 'react-apollo';
+import query from '../queries/customers';
+const client = new ApolloClient({
+  uri: "http://localhost:8000/graphql"
+});
 
 class InvoicesList extends Component {
     constructor(props) {
@@ -21,13 +25,12 @@ class InvoicesList extends Component {
     }
 
     componentDidMount() {
-        this.props.fetchCustomersList();
         this.props.fetchInvoicesList();
     }
 
     renderRow(invoice) {
         const {
-                customers, activeInvoiceId,
+                activeInvoiceId,
                 setInvoiceActive, fetchInvoiceItems, fetchInvoiceDetails,
                 clearInvoiceDetailsFetchData, deleteInvoice
             } = this.props,
@@ -36,7 +39,7 @@ class InvoicesList extends Component {
 
         return <tr key={id} className={isCurrentActive ? 'active' : ''}>
             <td>{id}</td>
-            <td>{customers.find(customer => customer.id === invoice.customer_id).name}</td>
+            <td>{this.props.data.customers.find(customer => customer.id === invoice.customer_id).name}</td>
             <td>{invoice.discount}</td>
             <td>{invoice.total}</td>
             <td className="invoice-actions">
@@ -106,29 +109,33 @@ class InvoicesList extends Component {
     }
 
     render() {
-        const {invoices, customers} = this.props,
+        const {invoices} = this.props,
+              {customers} = this.props.data,
             {showDetails} = this.state;
 
-        if (customers.length === 0) {
-            return <div>Loading</div>;
-        } else {
-            return <div>
-                {this.renderInvoiceList(invoices, customers)}
-                <div className='invoice-edit'>
-                    {showDetails && <InvoiceDetails />}
+        <ApolloProvider client={client}>
+          <Query query=query>
+                if (!customers) {
+                    return <div>Loading</div>;
+                }
+
+                return <div>
+                    {this.renderInvoiceList(invoices, customers)}
+                     <div className='invoice-edit'>
+                         {showDetails && <InvoiceDetails />}
+                     </div>
                 </div>
-            </div>;
-        }
+          </Query>
+        </ApolloProvider>
     }
 }
 
 const mapStateToProps = state => {
-    const {invoices, customers} = state.InvoicesList,
+    const {invoices} = state.InvoicesList,
         {products, invoiceItems, activeInvoiceId} = state.InvoiceDetails;
 
     return {
         invoices,
-        customers,
         products,
         invoiceItems,
         activeInvoiceId
@@ -138,7 +145,6 @@ const mapStateToProps = state => {
 export default connect(mapStateToProps, {
     fetchInvoicesList,
     deleteInvoice,
-    fetchCustomersList,
     fetchInvoiceDetails,
     fetchInvoiceItems,
     setInvoiceActive,

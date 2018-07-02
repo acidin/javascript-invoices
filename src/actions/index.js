@@ -18,10 +18,6 @@ export const fetchInvoicesList = () => {
     return asyncFetch(types.FETCH_INVOICES, '/invoices');
 };
 
-export const fetchCustomersList = () => {
-    return asyncFetch(types.FETCH_CUSTOMERS, '/customers');
-};
-
 export const fetchProductsList = () => {
     return asyncFetch(types.FETCH_PRODUCTS, '/products');
 };
@@ -152,7 +148,6 @@ export const clearInvoiceDetailsFetchData = () => {
         Promise.resolve(dispatch({
             type: types.CLEAR_INVOICE_DETAILS_FETCH_DATA
         })).then(dispatch(clearInvoiceDetails()))
-            .then(dispatch(fetchCustomersList()))
             .then(dispatch(fetchProductsList()));
     }
 };

@@ -5,7 +5,6 @@ import CustomerSelector from './CustomerSelector';
 import AddProductToInvoice from './AddProductToInvoice';
 import {
     fetchInvoicesList,
-    fetchCustomersList,
     fetchProductsList,
     updateInvoiceDetails,
     clearInvoiceDetails,
@@ -17,6 +16,11 @@ import {
     fetchInvoiceItems,
     pushInvoice
 } from '../actions';
+import { ApolloProvider, Query } from 'react-apollo';
+import query from '../queries/customers';
+const client = new ApolloClient({
+  uri: "http://localhost:8000/graphql"
+});
 
 class InvoiceDetails extends Component {
     componentWillMount() {
@@ -24,7 +28,6 @@ class InvoiceDetails extends Component {
     }
 
     componentDidMount() {
-        this.props.fetchCustomersList();
         this.props.fetchProductsList();
     }
 
@@ -52,14 +55,18 @@ class InvoiceDetails extends Component {
 
     render() {
         const {
-            invoice, customers, products, invoiceItems,
+            invoice, products, invoiceItems,
             updateInvoiceItem, deleteInvoiceItem, addInvoiceItem
         } = this.props;
 
         return <div>
+        <ApolloProvider client={client}>
+          <Query query=query>
             <CustomerSelector selectedCustomerId={invoice.customer_id}
                               onChange={::this.handleCustomerChange}
-                              customers={customers}/>
+                              customers={this.props.data.customers}/>
+          </Query>
+        </ApolloProvider>
             {invoice.id !== undefined &&
             <div>
                 <InvoiceItemsList invoiceItems={invoiceItems}
@@ -95,11 +102,10 @@ class InvoiceDetails extends Component {
 }
 
 const mapStateToProps = state => {
-    const {invoice, customers, products, invoiceItems} = state.InvoiceDetails;
+    const {invoice, products, invoiceItems} = state.InvoiceDetails;
 
     return {
         invoice,
-        customers,
         products,
         invoiceItems,
     };
@@ -107,7 +113,6 @@ const mapStateToProps = state => {
 
 export default connect(mapStateToProps, {
     fetchInvoicesList,
-    fetchCustomersList,
     fetchProductsList,
     pushInvoice,
     fetchInvoiceDetails,
