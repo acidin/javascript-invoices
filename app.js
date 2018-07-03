@@ -1,4 +1,4 @@
-var express = require('express'),
+const express = require('express'),
     bodyParser = require('body-parser'),
     http = require('http'),
     path = require('path'),
@@ -6,7 +6,7 @@ var express = require('express'),
     _ = require('lodash');
 const graphqlHTTP = require('express-graphql');
 
-let {
+const {
     GraphQLString,
     GraphQLList,
     GraphQLObjectType,
@@ -173,7 +173,7 @@ const schema = new GraphQLSchema({
     query: InvoicesRootType
 });
 
-var app = module.exports = express();
+let app = module.exports = express();
 app.set('port', process.env.PORT || 8000);
 app.use('/graphql', graphqlHTTP({
     schema: schema,
@@ -194,7 +194,7 @@ app.route('/api/customers')
         })
     })
     .post(function (req, res) {
-        var customer = Customer.build(_.pick(req.body, ['name', 'address', 'phone']));
+        let customer = Customer.build(_.pick(req.body, ['name', 'address', 'phone']));
         customer.save().then(function (customer) {
             res.json(customer);
         });
@@ -230,7 +230,7 @@ app.route('/api/products')
         })
     })
     .post(function (req, res) {
-        var product = Product.build(_.pick(req.body, ['name', 'price']));
+        let product = Product.build(_.pick(req.body, ['name', 'price']));
         product.save().then(function (product) {
             res.json(product);
         });
@@ -266,7 +266,7 @@ app.route('/api/invoices')
         })
     })
     .post(function (req, res) {
-        var invoice = Invoice.build(_.pick(req.body, ['customer_id', 'discount', 'total']));
+        let invoice = Invoice.build(_.pick(req.body, ['customer_id', 'discount', 'total']));
         invoice.save().then(function (invoice) {
             res.json(invoice);
         });
@@ -302,7 +302,7 @@ app.route('/api/invoices/:invoice_id/items')
         })
     })
     .post(function (req, res) {
-        var invoice_item = InvoiceItem.build(_.pick(req.body, ['product_id', 'quantity']));
+        let invoice_item = InvoiceItem.build(_.pick(req.body, ['product_id', 'quantity']));
         invoice_item.set('invoice_id', req.params.invoice_id);
         invoice_item.save().then(function (invoice_item) {
             res.json(invoice_item);
