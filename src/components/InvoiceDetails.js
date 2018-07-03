@@ -56,8 +56,6 @@ class InvoiceDetails extends Component {
             updateInvoiceItem, deleteInvoiceItem, addInvoiceItem
         } = this.props;
 
-        console.log('test for update');
-
         return <div>
             <Query query={query}>
                 {({loading, error, data}) => {

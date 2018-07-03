@@ -1,7 +1,6 @@
 const path = require('path');
-
-var PUBLIC_DIR = path.resolve(__dirname, 'public/js');
-var SRC_DIR = path.resolve(__dirname, 'src');
+const PUBLIC_DIR = path.resolve(__dirname, 'public/js');
+const SRC_DIR = path.resolve(__dirname, 'src');
 
 module.exports = {
     entry: SRC_DIR + '/index.js',

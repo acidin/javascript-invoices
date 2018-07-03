@@ -10,8 +10,8 @@ import {
     clearInvoiceDetailsFetchData
 } from '../actions';
 import InvoiceDetails from './InvoiceDetails';
-import {Query} from 'react-apollo';
 import query from '../queries/customers';
+import {client} from '../index';
 
 class InvoicesList extends Component {
     constructor(props) {
@@ -23,6 +23,15 @@ class InvoicesList extends Component {
 
     componentDidMount() {
         this.props.fetchInvoicesList();
+
+        client.query({query})
+            .then(({loading, error, data}) => {
+                if (!loading && !error) {
+                    this.setState({
+                        customers: data.customers
+                    })
+                }
+            });
     }
 
     renderRow(invoice) {
@@ -32,11 +41,14 @@ class InvoicesList extends Component {
                 clearInvoiceDetailsFetchData, deleteInvoice
             } = this.props,
             {id} = invoice,
-            isCurrentActive = id === activeInvoiceId;
+            isCurrentActive = id === activeInvoiceId,
+            {customers} = this.state;
+
+        if (!customers) return null;
 
         return <tr key={id} className={isCurrentActive ? 'active' : ''}>
             <td>{id}</td>
-            <td>{this.props.data.customers.find(customer => customer.id === invoice.customer_id).name}</td>
+            <td>{customers.find(customer => parseInt(customer.id) === invoice.customer_id).name}</td>
             <td>{invoice.discount}</td>
             <td>{invoice.total}</td>
             <td className="invoice-actions">
@@ -109,22 +121,14 @@ class InvoicesList extends Component {
 
     render() {
         const {invoices} = this.props,
-            {showDetails} = this.state;
+            {showDetails, customers} = this.state;
 
-        console.log('test for update');
-
-        return <Query query={query}>
-            {({loading, error, data}) => {
-                if (loading) return <p>Loading...</p>;
-                if (error) return <p>Error: {error}</p>;
-                return <div>
-                    {this.renderInvoiceList(invoices, data.customers)}
-                    <div className='invoice-edit'>
-                        {showDetails && <InvoiceDetails/>}
-                    </div>
-                </div>
-            }}
-        </Query>
+        return <div>
+            {this.renderInvoiceList(invoices, customers)}
+            <div className='invoice-edit'>
+                {showDetails && <InvoiceDetails/>}
+            </div>
+        </div>;
     }
 }
 
@@ -148,6 +152,4 @@ export default connect(mapStateToProps, {
     setInvoiceActive,
     clearInvoiceDetails,
     clearInvoiceDetailsFetchData
-})(
-    InvoicesList
-);
+})(InvoicesList);

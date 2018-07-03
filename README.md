@@ -1,5 +1,3 @@
-# Update:
-
 # Dependencies
 
 - sqlite3
