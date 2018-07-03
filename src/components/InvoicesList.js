@@ -10,11 +10,8 @@ import {
     clearInvoiceDetailsFetchData
 } from '../actions';
 import InvoiceDetails from './InvoiceDetails';
-import { ApolloProvider, Query } from 'react-apollo';
+import {Query} from 'react-apollo';
 import query from '../queries/customers';
-const client = new ApolloClient({
-  uri: "http://localhost:8000/graphql"
-});
 
 class InvoicesList extends Component {
     constructor(props) {
@@ -52,7 +49,8 @@ class InvoicesList extends Component {
                             fetchInvoiceItems(id);
                             fetchInvoiceDetails(id);
                         }}>
-                    <span className='glyphicon glyphicon-pencil'/> Edit
+                    <span className='glyphicon glyphicon-pencil'/>
+                    Edit
                 </button>
                 <button className="btn btn-danger"
                         onClick={() => {
@@ -65,7 +63,8 @@ class InvoicesList extends Component {
                             }
                             deleteInvoice(id);
                         }}>
-                    <span className='glyphicon glyphicon-remove'/> Delete
+                    <span className='glyphicon glyphicon-remove'/>
+                    Delete
                 </button>
             </td>
         </tr>;
@@ -110,23 +109,22 @@ class InvoicesList extends Component {
 
     render() {
         const {invoices} = this.props,
-              {customers} = this.props.data,
             {showDetails} = this.state;
 
-        <ApolloProvider client={client}>
-          <Query query=query>
-                if (!customers) {
-                    return <div>Loading</div>;
-                }
+        console.log('test for update');
 
+        return <Query query={query}>
+            {({loading, error, data}) => {
+                if (loading) return <p>Loading...</p>;
+                if (error) return <p>Error: {error}</p>;
                 return <div>
-                    {this.renderInvoiceList(invoices, customers)}
-                     <div className='invoice-edit'>
-                         {showDetails && <InvoiceDetails />}
-                     </div>
+                    {this.renderInvoiceList(invoices, data.customers)}
+                    <div className='invoice-edit'>
+                        {showDetails && <InvoiceDetails/>}
+                    </div>
                 </div>
-          </Query>
-        </ApolloProvider>
+            }}
+        </Query>
     }
 }
 

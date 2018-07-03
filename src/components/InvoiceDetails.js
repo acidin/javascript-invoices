@@ -16,11 +16,8 @@ import {
     fetchInvoiceItems,
     pushInvoice
 } from '../actions';
-import { ApolloProvider, Query } from 'react-apollo';
+import {Query} from 'react-apollo';
 import query from '../queries/customers';
-const client = new ApolloClient({
-  uri: "http://localhost:8000/graphql"
-});
 
 class InvoiceDetails extends Component {
     componentWillMount() {
@@ -59,14 +56,18 @@ class InvoiceDetails extends Component {
             updateInvoiceItem, deleteInvoiceItem, addInvoiceItem
         } = this.props;
 
+        console.log('test for update');
+
         return <div>
-        <ApolloProvider client={client}>
-          <Query query=query>
-            <CustomerSelector selectedCustomerId={invoice.customer_id}
-                              onChange={::this.handleCustomerChange}
-                              customers={this.props.data.customers}/>
-          </Query>
-        </ApolloProvider>
+            <Query query={query}>
+                {({loading, error, data}) => {
+                    if (loading) return <p>Loading...</p>;
+                    if (error) return <p>Error: {error}</p>;
+                    return <CustomerSelector selectedCustomerId={invoice.customer_id}
+                                             onChange={::this.handleCustomerChange}
+                                             customers={data.customers}/>
+                }}
+            </Query>
             {invoice.id !== undefined &&
             <div>
                 <InvoiceItemsList invoiceItems={invoiceItems}

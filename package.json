@@ -3,6 +3,7 @@
     "version": "0.0.2",
     "private": true,
     "dependencies": {
+        "apollo-client-preset": "^1.0.8",
         "body-parser": "1.18.3",
         "express": "~4.13.4",
         "express-graphql": "^0.6.12",
@@ -28,5 +29,8 @@
         "babel-preset-stage-0": "^6.24.1",
         "path": "^0.12.7",
         "webpack": "^3.5.5"
+    },
+    "scripts": {
+        "build": "webpack && node app.js"
     }
 }

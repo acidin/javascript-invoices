@@ -1,12 +1,5 @@
 # Update:
 
-## How to run:
-```
-npm i
-node app.js
-```
-then visit `http://localhost:8000`
-
 # Dependencies
 
 - sqlite3
@@ -19,7 +12,7 @@ then visit `http://localhost:8000`
 `npm install`
 
 ###### Run the node server
-`node app.js`
+`npm run build`
 
 ###### Viewing the application in your browser
 `http://localhost:8000`
