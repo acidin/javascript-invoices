@@ -7,6 +7,8 @@ import {
     fetchProductDetails
 } from '../actions';
 import ProductDetails from './ProductDetails';
+import query from '../queries/products';
+import {client} from '../index';
 
 class ProductsList extends Component {
     constructor(props) {
@@ -18,16 +20,28 @@ class ProductsList extends Component {
 
     componentDidMount() {
         this.props.fetchProductsList();
+
+        client.query({query})
+            .then(({loading, error, data}) => {
+                if (!loading && !error) {
+                    this.setState({
+                        products: data.products
+                    })
+                }
+            });
     }
 
     renderRow(product) {
         const {
-                products, activeProductId,
+                activeProductId,
                 deleteProduct, setProductActive,
                 fetchProductDetails
             } = this.props,
+            {products} = this.state,
             {id} = product,
             isCurrentActive = id === activeProductId;
+
+        if (!products) return null;
 
         return <tr key={id} className={isCurrentActive ? 'active' : ''}>
             <td>{id}</td>
@@ -51,7 +65,6 @@ class ProductsList extends Component {
                                     showDetails: false
                                 });
                             }
-
                             deleteProduct(id);
                         }}>
                     <span className='glyphicon glyphicon-remove'/> Delete
@@ -94,8 +107,10 @@ class ProductsList extends Component {
     }
 
     render() {
-        const {products} = this.props,
+        const {products} = this.state,
             {showDetails} = this.state;
+
+        if (!products) return null;
 
         return <div>
             {this.renderProductsList(products)}
@@ -120,6 +135,4 @@ export default connect(mapStateToProps, {
     deleteProduct,
     setProductActive,
     fetchProductDetails
-})(
-    ProductsList
-);
+})(ProductsList);

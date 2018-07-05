@@ -13,6 +13,7 @@ const {
     GraphQLNonNull,
     GraphQLID,
     GraphQLSchema,
+    GraphQLFloat
 } = require('graphql');
 
 const CustomersType = new GraphQLObjectType({
@@ -22,6 +23,15 @@ const CustomersType = new GraphQLObjectType({
         name: {type: new GraphQLNonNull(GraphQLString)},
         address: {type: new GraphQLNonNull(GraphQLString)},
         phone: {type: new GraphQLNonNull(GraphQLString)}
+    })
+});
+
+const ProductType = new GraphQLObjectType({
+    name: "Product",
+    fields: () => ({
+        id: {type: new GraphQLNonNull(GraphQLID)},
+        name: {type: new GraphQLNonNull(GraphQLString)},
+        price: {type: new GraphQLNonNull(GraphQLFloat)}
     })
 });
 
@@ -145,15 +155,38 @@ sequelize.sync({
     console.log("ERROR SYNCING WITH DB", e);
 });
 
+const mutation = new GraphQLObjectType({
+    name: 'Mutation',
+    fields: () => ({
+        addProduct: {
+            type: ProductType,
+            args: {
+                name: {type: GraphQLString},
+                price: {type: GraphQLFloat}
+            },
+            resolve(parentValue, {name, price}) {
+                return Product.create({
+                    name,
+                    price
+                });
+            }
+        },
+        deleteProduct: {
+            type: ProductType,
+            args: {id: {type: GraphQLID}},
+            resolve(parentValue, {id}) {
+                return Product.findById(id)
+                    .then(product => {
+                        product.destroy();
+                    });
+            }
+        }
+    })
+});
+
 const InvoicesRootType = new GraphQLObjectType({
     name: 'InvoicesAppSchema',
     fields: () => ({
-        customers: {
-            type: new GraphQLList(CustomersType),
-            resolve: () => {
-                return Customer.findAll();
-            }
-        },
         customer: {
             type: CustomersType,
             args: {
@@ -165,12 +198,37 @@ const InvoicesRootType = new GraphQLObjectType({
             resolve(parentValue, {id}) {
                 return Customer.findById(id);
             }
+        },
+        customers: {
+            type: new GraphQLList(CustomersType),
+            resolve: () => {
+                return Customer.findAll();
+            }
+        },
+        product: {
+            type: ProductType,
+            args: {
+                id:
+                    {
+                        type: new GraphQLNonNull(GraphQLID)
+                    }
+            },
+            resolve(parentValue, {id}) {
+                return Product.findById(id);
+            }
+        },
+        products: {
+            type: new GraphQLList(ProductType),
+            resolve: () => {
+                return Product.findAll();
+            }
         }
     })
 });
 
 const schema = new GraphQLSchema({
-    query: InvoicesRootType
+    query: InvoicesRootType,
+    mutation: mutation
 });
 
 let app = module.exports = express();
