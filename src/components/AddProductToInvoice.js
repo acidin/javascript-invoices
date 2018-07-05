@@ -3,7 +3,7 @@ import config from '../config.json';
 
 class AddProductToInvoice extends Component {
     handleNewInvoiceProduct(e) {
-        const productId = parseInt(e.target.value),
+        const productId = parseInt(e.target.value), // TODO get rid of all parseInt, compare with the redux version
             {invoiceId, pushNewItemToInvoice} = this.props,
             productQuantity = config.DEFAULT_PRODUCT_QUANTITY;
 

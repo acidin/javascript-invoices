@@ -13,7 +13,8 @@ const {
     GraphQLNonNull,
     GraphQLID,
     GraphQLSchema,
-    GraphQLFloat
+    GraphQLFloat,
+    GraphQLBoolean
 } = require('graphql');
 
 const CustomersType = new GraphQLObjectType({
@@ -165,10 +166,26 @@ const mutation = new GraphQLObjectType({
                 price: {type: GraphQLFloat}
             },
             resolve(parentValue, {name, price}) {
-                return Product.create({
-                    name,
-                    price
-                });
+                return Product.build({name, price})
+                    .save()
+                    .then(({id, name, price}) => ({id, name, price}))
+                    .catch(error => console.error(error));
+            }
+        },
+        updateProduct: {
+            type: ProductType,
+            args: {
+                id: {type: GraphQLID},
+                name: {type: GraphQLString},
+                price: {type: GraphQLFloat}
+            },
+            resolve(parentValue, {id, name, price}) {
+                return Product.findById(id)
+                    .then(product => {
+                        return product.update({name, price})
+                            .then(({id, name, price}) => ({id, name, price}))
+                            .catch(error => console.error(error));
+                    });
             }
         },
         deleteProduct: {
@@ -177,7 +194,9 @@ const mutation = new GraphQLObjectType({
             resolve(parentValue, {id}) {
                 return Product.findById(id)
                     .then(product => {
-                        product.destroy();
+                        return product.destroy()
+                            .then(({name, price}) => ({name, price}))
+                            .catch(error => console.error(error));
                     });
             }
         }
