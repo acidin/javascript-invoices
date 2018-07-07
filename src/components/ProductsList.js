@@ -1,14 +1,22 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {
-    fetchProductsList,
-    deleteProduct,
     setProductActive,
     fetchProductDetails
 } from '../actions';
 import ProductDetails from './ProductDetails';
 import query from '../queries/products';
-import {client} from '../index';
+import {Mutation, Query} from 'react-apollo';
+import gql from 'graphql-tag';
+
+const DeleteProduct = gql`
+mutation DeleteProduct($id: ID) {
+    deleteProduct(id: $id) {
+        name
+        price
+    }
+}
+`;
 
 class ProductsList extends Component {
     constructor(props) {
@@ -18,62 +26,68 @@ class ProductsList extends Component {
         }
     }
 
-    componentDidMount() {
-        this.props.fetchProductsList();
+    deleteProductItem(id) {
+        const {activeProductId} = this.props,
+            isCurrentActive = id === activeProductId;
 
-        client.query({query})
-            .then(({loading, error, data}) => {
-                if (!loading && !error) {
-                    this.setState({
-                        products: data.products
-                    })
-                }
-            });
+        return (
+            <Mutation mutation={DeleteProduct}>
+                {(deleteProduct, {data}) => (
+                    <button className="btn btn-danger"
+                            onClick={() => {
+                                if (isCurrentActive) {
+                                    this.setState({
+                                        showDetails: false
+                                    });
+                                }
+                                deleteProduct({variables: {id: id}})
+                            }}>
+                        <span className='glyphicon glyphicon-remove'/>
+                        Delete
+                    </button>
+                )}
+            </Mutation>
+        );
+    }
+
+    showDetailsProductItem(id) {
+        const {
+            setProductActive,
+            fetchProductDetails
+        } = this.props;
+
+        return <button className="btn btn-info"
+                       onClick={() => {
+                           this.setState({
+                               showDetails: true
+                           });
+                           fetchProductDetails(id);
+                           setProductActive(id);
+                       }}>
+            <span className='glyphicon glyphicon-pencil'/>
+            Edit
+        </button>;
     }
 
     renderRow(product) {
-        const {
-                activeProductId,
-                deleteProduct, setProductActive,
-                fetchProductDetails
-            } = this.props,
-            {products} = this.state,
+        const {activeProductId} = this.props,
             {id} = product,
             isCurrentActive = id === activeProductId;
 
-        if (!products) return null;
-
         return <tr key={id} className={isCurrentActive ? 'active' : ''}>
             <td>{id}</td>
-            <td>{products.find(prod => prod.id === product.id).name}</td>
+            <td>{product.name}</td>
             <td>{product.price}</td>
-            <td className="invoice-actions">
-                <button className="btn btn-info"
-                        onClick={() => {
-                            this.setState({
-                                showDetails: true
-                            });
-                            fetchProductDetails(id);
-                            setProductActive(id);
-                        }}>
-                    <span className='glyphicon glyphicon-pencil'/> Edit
-                </button>
-                <button className="btn btn-danger"
-                        onClick={() => {
-                            if (isCurrentActive) {
-                                this.setState({
-                                    showDetails: false
-                                });
-                            }
-                            deleteProduct(id);
-                        }}>
-                    <span className='glyphicon glyphicon-remove'/> Delete
-                </button>
+            <td className='invoice-actions'>
+                {this.showDetailsProductItem(id)}
+                {this.deleteProductItem(id)}
             </td>
         </tr>;
     }
 
     renderProductsList(products) {
+        if (!products) return null;
+
         return <div className='invoices-list'>
             <table className='table invoices-table'>
                 <thead>
@@ -107,17 +121,21 @@ class ProductsList extends Component {
     }
 
     render() {
-        const {products} = this.state,
-            {showDetails} = this.state;
+        const {showDetails} = this.state;
 
-        if (!products) return null;
+        return <Query query={query}>
+            {({loading, error, data}) => {
+                if (loading) return null;
+                if (error) return `Error!: ${error}`;
 
-        return <div>
-            {this.renderProductsList(products)}
-            <div className='invoice-edit'>
-                {showDetails && <ProductDetails />}
-            </div>
-        </div>;
+                return <div>
+                    {this.renderProductsList(data.products)}
+                    <div className='invoice-edit'>
+                        {showDetails && <ProductDetails/>}
+                    </div>
+                </div>;
+            }}
+        </Query>
     }
 }
 
@@ -131,8 +149,6 @@ const mapStateToProps = state => {
 };
 
 export default connect(mapStateToProps, {
-    fetchProductsList,
-    deleteProduct,
     setProductActive,
     fetchProductDetails
 })(ProductsList);
