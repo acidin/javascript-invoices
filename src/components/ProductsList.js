@@ -31,7 +31,16 @@ class ProductsList extends Component {
             isCurrentActive = id === activeProductId;
 
         return (
-            <Mutation mutation={DeleteProduct}>
+            <Mutation
+                mutation={DeleteProduct}
+                update={(cache, {data: {deleteProduct}}) => {
+                    const {products} = cache.readQuery({query});
+                    cache.writeQuery({
+                        query,
+                        data: {products: products.filter(product => product.id !== id)}
+                    });
+                }}
+            >
                 {(deleteProduct, {data}) => (
                     <button className="btn btn-danger"
                             onClick={() => {
