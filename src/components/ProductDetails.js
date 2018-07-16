@@ -2,6 +2,7 @@ import React from 'react';
 import {Mutation} from 'react-apollo';
 import gql from 'graphql-tag'
 import query from '../queries/products';
+import {client} from '../index';
 
 const AddProduct = gql`
 mutation AddProduct($name: String, $price: Float) {
@@ -35,11 +36,12 @@ class ProductDetails extends React.Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        if (nextProps.newItem !== this.state.newItem) {
-            this.setState({newItem: nextProps.newItem})
-        }
-        if (nextProps.activeProductId !== this.state.activeProductId) {
-            this.setState({activeProductId: nextProps.activeProductId})
+        if (nextProps.newItem && !this.state.newItem) {
+            this.setState({
+                newItem: nextProps.newItem,
+                name: '',
+                price: 0
+            })
         }
     }
 
@@ -64,6 +66,17 @@ class ProductDetails extends React.Component {
                     this.setState({
                         name,
                         newItem: false
+                    }, () => {
+                        const {products} = client.readQuery({query});
+                        const index = products.findIndex(product => product.id === this.state.activeProductId);
+
+                        products[index].name = this.state.name;
+                        products[index].price = this.state.price;
+
+                        client.writeQuery({
+                            query,
+                            data: {products}
+                        });
                     });
                 });
         }
@@ -123,23 +136,7 @@ class ProductDetails extends React.Component {
     }
 
     updateProductMutation() {
-        return <Mutation
-            mutation={UpdateProduct}
-            update={(cache, {data: {updateProduct}}) => {
-                const {products} = cache.readQuery({query});
-                const index = products.findIndex(product => product.id === this.state.activeProductId);
-
-                console.log(this.state.name); // TODO outdated state
-
-                products[index].name = this.state.name;
-                products[index].price = this.state.price;
-
-                cache.writeQuery({
-                    query,
-                    data: {products}
-                });
-            }}
-        >
+        return <Mutation mutation={UpdateProduct}>
             {updateProduct => (this.productItemDetails(updateProduct)
             )}
         </Mutation>;

@@ -133,7 +133,10 @@ class ProductsList extends Component {
     }
 
     setActiveId = id => {
-        this.setState({activeProductId: id});
+        this.setState({
+            activeProductId: id,
+            newItem: false
+        });
     };
 
     render() {
