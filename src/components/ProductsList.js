@@ -1,5 +1,4 @@
 import React, {Component} from 'react';
-import {connect} from 'react-redux';
 import ProductDetails from './ProductDetails';
 import query from '../queries/products';
 import {Mutation, Query} from 'react-apollo';
@@ -151,14 +150,4 @@ class ProductsList extends Component {
     }
 }
 
-const mapStateToProps = state => {
-    const {products, activeProductId} = state.ProductsList;
-
-    return {
-        products,
-        activeProductId
-    };
-};
-
-export default connect(mapStateToProps, {
-})(ProductsList);
+export default ProductsList;
