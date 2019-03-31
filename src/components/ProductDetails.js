@@ -23,36 +23,29 @@ mutation UpdateProduct($id: ID, $name: String, $price: Float) {
 }
 `;
 
-const ProductQuery = gql`
-query ProductQuery($id: ID) {
-    product(id: $id) {
-        id
-        name
-        price
-    }
-}
-`;
-
 class ProductDetails extends React.Component {
     constructor(props) {
         super(props);
 
         this.state = {
-            name: '',
-            price: 0,
+            name: props.name,
+            price: props.price || 0,
             newItem: props.newItem,
-            activeProductId: props.activeProductId
+            activeProductId: props.id,
         }
     }
 
-    componentWillReceiveProps(nextProps) {
-        if (nextProps.newItem && !this.state.newItem) {
-            this.setState({
+    static getDerivedStateFromProps(nextProps, prevState) {
+        if (nextProps.id !== prevState.id) {
+            return {
+                name: nextProps.name,
+                price: nextProps.price || 0,
                 newItem: nextProps.newItem,
-                name: '',
-                price: 0
-            })
+                activeProductId: nextProps.id,
+            }
         }
+
+        return null;
     }
 
     handleNameChange = func => e => {
@@ -119,13 +112,13 @@ class ProductDetails extends React.Component {
                    min='0'
                    max='100'
                    value={name}
-                   onChange={::this.handleNameChange(func)}/>
+                   onChange={this.handleNameChange(func)}/>
             <label htmlFor='price'>Price:</label>
             <input type='text'
                    className='form-control'
                    id='price'
                    value={price}
-                   onChange={::this.handlePriceChange(func)}/>
+                   onChange={this.handlePriceChange(func)}/>
         </div>
     }
 

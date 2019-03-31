@@ -56,11 +56,14 @@ class ProductsList extends Component {
         );
     }
 
-    showDetailsProductItem(id) {
+    showDetailsProductItem(id, name, price) {
         return <button className="btn btn-info"
                        onClick={() => {
                            this.setState({
-                               showDetails: true
+                               showDetails: true,
+                               activeProductId: id,
+                               activeProductName: name,
+                               activeProducPrice: price,
                            });
                        }}>
             <span className='glyphicon glyphicon-pencil'/>
@@ -70,15 +73,15 @@ class ProductsList extends Component {
 
     renderRow(product) {
         const {activeProductId} = this.state,
-            {id} = product,
+            {id, name, price} = product,
             isCurrentActive = id === activeProductId;
 
         return <tr key={id} className={isCurrentActive ? 'active' : ''}>
             <td>{id}</td>
-            <td>{product.name}</td>
-            <td>{product.price}</td>
+            <td>{name}</td>
+            <td>{price}</td>
             <td className='invoice-actions'>
-                {this.showDetailsProductItem(id)}
+                {this.showDetailsProductItem(id,name,price)}
                 {this.deleteProductItem(id)}
             </td>
         </tr>;
@@ -128,7 +131,7 @@ class ProductsList extends Component {
     };
 
     render() {
-        const {showDetails, newItem} = this.state;
+        const {showDetails, newItem, activeProductId, activeProductName, activeProductPrice } = this.state;
 
         return <Query query={query}>
             {({loading, error, data}) => {
@@ -142,6 +145,9 @@ class ProductsList extends Component {
                         <ProductDetails
                             newItem={newItem}
                             setActiveId={this.setActiveId}
+                            id={activeProductId}
+                            name={activeProductName}
+                            price={activeProductPrice}
                         />}
                     </div>
                 </div>;
