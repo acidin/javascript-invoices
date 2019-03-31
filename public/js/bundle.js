@@ -39113,11 +39113,6 @@ var ProductsList = function (_Component) {
         value: function showDetailsProductItem(id) {
             var _this3 = this;
 
-            var _props = this.props,
-                setProductActive = _props.setProductActive,
-                fetchProductDetails = _props.fetchProductDetails;
-
-
             return _react2.default.createElement(
                 'button',
                 { className: 'btn btn-info',
@@ -39125,8 +39120,6 @@ var ProductsList = function (_Component) {
                         _this3.setState({
                             showDetails: true
                         });
-                        fetchProductDetails(id);
-                        setProductActive(id);
                     } },
                 _react2.default.createElement('span', { className: 'glyphicon glyphicon-pencil' }),
                 'Edit'
@@ -39285,10 +39278,7 @@ var mapStateToProps = function mapStateToProps(state) {
     };
 };
 
-exports.default = (0, _reactRedux.connect)(mapStateToProps, {
-    setProductActive: _actions.setProductActive,
-    fetchProductDetails: _actions.fetchProductDetails
-})(ProductsList);
+exports.default = (0, _reactRedux.connect)(mapStateToProps, {})(ProductsList);
 
 /***/ }),
 /* 218 */
@@ -39304,7 +39294,8 @@ Object.defineProperty(exports, "__esModule", {
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 var _templateObject = _taggedTemplateLiteral(['\nmutation AddProduct($name: String, $price: Float) {\n    addProduct(name: $name, price: $price) {\n        id\n        name\n        price\n    }\n}\n'], ['\nmutation AddProduct($name: String, $price: Float) {\n    addProduct(name: $name, price: $price) {\n        id\n        name\n        price\n    }\n}\n']),
-    _templateObject2 = _taggedTemplateLiteral(['\nmutation UpdateProduct($id: ID, $name: String, $price: Float) {\n    updateProduct(id: $id, name: $name, price: $price) {\n        name\n        price\n    }\n}\n'], ['\nmutation UpdateProduct($id: ID, $name: String, $price: Float) {\n    updateProduct(id: $id, name: $name, price: $price) {\n        name\n        price\n    }\n}\n']);
+    _templateObject2 = _taggedTemplateLiteral(['\nmutation UpdateProduct($id: ID, $name: String, $price: Float) {\n    updateProduct(id: $id, name: $name, price: $price) {\n        name\n        price\n    }\n}\n'], ['\nmutation UpdateProduct($id: ID, $name: String, $price: Float) {\n    updateProduct(id: $id, name: $name, price: $price) {\n        name\n        price\n    }\n}\n']),
+    _templateObject3 = _taggedTemplateLiteral(['\nquery ProductQuery($id: ID) {\n    product(id: $id) {\n        id\n        name\n        price\n    }\n}\n'], ['\nquery ProductQuery($id: ID) {\n    product(id: $id) {\n        id\n        name\n        price\n    }\n}\n']);
 
 var _react = __webpack_require__(2);
 
@@ -39335,6 +39326,8 @@ function _taggedTemplateLiteral(strings, raw) { return Object.freeze(Object.defi
 var AddProduct = (0, _graphqlTag2.default)(_templateObject);
 
 var UpdateProduct = (0, _graphqlTag2.default)(_templateObject2);
+
+var ProductQuery = (0, _graphqlTag2.default)(_templateObject3);
 
 var ProductDetails = function (_React$Component) {
     _inherits(ProductDetails, _React$Component);

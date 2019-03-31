@@ -1,9 +1,5 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
-import {
-    setProductActive,
-    fetchProductDetails
-} from '../actions';
 import ProductDetails from './ProductDetails';
 import query from '../queries/products';
 import {Mutation, Query} from 'react-apollo';
@@ -62,18 +58,11 @@ class ProductsList extends Component {
     }
 
     showDetailsProductItem(id) {
-        const {
-            setProductActive,
-            fetchProductDetails
-        } = this.props;
-
         return <button className="btn btn-info"
                        onClick={() => {
                            this.setState({
                                showDetails: true
                            });
-                           fetchProductDetails(id);
-                           setProductActive(id);
                        }}>
             <span className='glyphicon glyphicon-pencil'/>
             Edit
@@ -172,6 +161,4 @@ const mapStateToProps = state => {
 };
 
 export default connect(mapStateToProps, {
-    setProductActive,
-    fetchProductDetails
 })(ProductsList);

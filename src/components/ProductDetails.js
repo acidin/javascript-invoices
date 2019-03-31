@@ -23,6 +23,16 @@ mutation UpdateProduct($id: ID, $name: String, $price: Float) {
 }
 `;
 
+const ProductQuery = gql`
+query ProductQuery($id: ID) {
+    product(id: $id) {
+        id
+        name
+        price
+    }
+}
+`;
+
 class ProductDetails extends React.Component {
     constructor(props) {
         super(props);
