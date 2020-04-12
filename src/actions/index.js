@@ -14,9 +14,22 @@ const asyncFetch = (actionType, uri, options = {}, additionalAction) => {
     };
 };
 
+// export const fetchInvoicesList = () => {
+//     return asyncFetch(types.FETCH_INVOICES, '/invoices');
+// };
+
 export const fetchInvoicesList = () => {
-    return asyncFetch(types.FETCH_INVOICES, '/invoices');
+    return {
+        type: types.FETCH_INVOICES
+    }
 };
+
+export const receiveInvoicesList = (invoices) => {
+    return {
+        type: types.FETCH_INVOICES_SUCCESSFUL,
+        payload: invoices
+    }
+}
 
 export const fetchProductsList = () => {
     return asyncFetch(types.FETCH_PRODUCTS, '/products');
@@ -38,12 +51,45 @@ export const createInvoice = invoice => {
         });
 };
 
+// export const createInvoice = invoice => {
+//     return {
+//         type: types.PUSH_INVOICE,
+//         payload: invoice
+//     }
+// };
+
+// export const createInvoiceSuccessful = invoice => {
+//     return {
+//         type: types.PUSH_INVOICE_SUCCESSFUL,
+//         payload: invoice
+//     }
+// }
+
+
+
+
+
+// export const deleteInvoice = invoiceId => {
+//     return asyncFetch(types.DELETE_INVOICE,
+//         `/invoices/${invoiceId}`, {
+//             method: 'delete'
+//         });
+// };
+
 export const deleteInvoice = invoiceId => {
-    return asyncFetch(types.DELETE_INVOICE,
-        `/invoices/${invoiceId}`, {
-            method: 'delete'
-        });
+    return {
+        type: types.DELETE_INVOICE,
+        payload: invoiceId
+    }
 };
+
+export const deleteInvoiceSuccessful = invoiceId => {
+    return {
+        type: types.DELETE_INVOICE_SUCCESSFUL,
+        payload: invoiceId
+    }
+};
+
 
 export const setInvoiceActive = id => {
     return {

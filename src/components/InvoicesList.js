@@ -33,8 +33,8 @@ class InvoicesList extends Component {
                 }
             });
     }
-
-    renderRow(invoice) {
+ 
+    renderRow(invoice = {}) {
         const {
                 activeInvoiceId,
                 setInvoiceActive, fetchInvoiceItems, fetchInvoiceDetails,
@@ -44,7 +44,7 @@ class InvoicesList extends Component {
             isCurrentActive = id === activeInvoiceId,
             {customers} = this.state;
 
-        if (!customers) return null;
+        if (!customers || !id) return null;
 
         return <tr key={id} className={isCurrentActive ? 'active' : ''}>
             <td>{id}</td>
