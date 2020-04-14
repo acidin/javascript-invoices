@@ -29,7 +29,7 @@ class InvoiceItemsList extends Component {
                 </thead>
                 <tbody>
                 {invoiceItems.map(invoiceItem => {
-                    const product = products.find(p => p.id === invoiceItem.product_id);
+                    const product = products.find(p => p.id === invoiceItem.product_id) || {};
 
                     return <tr key={invoiceItem.id}>
                         <td className="product-name">{product.name}</td>

@@ -121,21 +121,35 @@ export const updateInvoiceDetails = (field, value) => {
     };
 };
 
+// export const addInvoiceItem = (invoiceId, productId, quantity) => {
+//     return dispatch => {
+//         dispatch(asyncFetch(types.ADD_INVOICE_ITEM,
+//             `/invoices/${invoiceId}/items`, {
+//                 method: 'post',
+//                 headers: {
+//                     'Accept': 'application/json',
+//                     'Content-Type': 'application/json'
+//                 },
+//                 body: JSON.stringify({
+//                     'product_id': productId,
+//                     'quantity': quantity
+//                 })
+//             }, recalculateTotal())
+//         );
+//     }
+// };
+
 export const addInvoiceItem = (invoiceId, productId, quantity) => {
-    return dispatch => {
-        dispatch(asyncFetch(types.ADD_INVOICE_ITEM,
-            `/invoices/${invoiceId}/items`, {
-                method: 'post',
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    'product_id': productId,
-                    'quantity': quantity
-                })
-            }, recalculateTotal())
-        );
+    return {
+        type: types.ADD_INVOICE_ITEM,
+        payload: {invoiceId, productId, quantity}
+    }
+};
+
+export const addInvoiceItemSuccessfull = (invoiceId, productId, quantity) => {
+    return {
+        type: types.ADD_INVOICE_ITEM_SUCCESSFUL,
+        payload: {invoiceId, productId, quantity}
     }
 };
 
