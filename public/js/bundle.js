@@ -1372,9 +1372,9 @@ module.exports = emptyFunction;
 
 
 Object.defineProperty(exports, "__esModule", {
-    value: true
+  value: true
 });
-exports.fetchProductDetails = exports.setProductActive = exports.deleteProduct = exports.updateProductDetails = exports.updateProduct = exports.createProduct = exports.pushProduct = exports.clearInvoiceDetailsFetchData = exports.clearInvoiceDetails = exports.recalculateTotal = exports.fetchInvoiceDetails = exports.deleteInvoiceItem = exports.updateInvoiceItem = exports.fetchInvoiceItems = exports.addInvoiceItemSuccessfull = exports.addInvoiceItem = exports.updateInvoiceDetails = exports.updateInvoice = exports.setInvoiceActive = exports.deleteInvoiceSuccessful = exports.deleteInvoice = exports.createInvoice = exports.pushInvoice = exports.fetchProductsList = exports.receiveInvoicesList = exports.fetchInvoicesList = undefined;
+exports.fetchProductDetails = exports.setProductActive = exports.deleteProduct = exports.updateProductDetails = exports.updateProduct = exports.createProduct = exports.pushProduct = exports.clearInvoiceDetailsFetchData = exports.clearInvoiceDetails = exports.recalculateTotal = exports.receiveInvoiceDetails = exports.fetchInvoiceDetails = exports.deleteInvoiceItem = exports.updateInvoiceItem = exports.receiveInvoiceItems = exports.fetchInvoiceItems = exports.addInvoiceItemSuccessfull = exports.addInvoiceItem = exports.updateInvoiceDetails = exports.updateInvoice = exports.setInvoiceActive = exports.deleteInvoiceSuccessful = exports.deleteInvoice = exports.createInvoice = exports.pushInvoice = exports.receiveProductsList = exports.fetchProductsList = exports.receiveInvoicesList = exports.fetchInvoicesList = undefined;
 
 var _types = __webpack_require__(6);
 
@@ -1389,56 +1389,61 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
 var asyncFetch = function asyncFetch(actionType, uri) {
-    var options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
-    var additionalAction = arguments[3];
+  var options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+  var additionalAction = arguments[3];
 
-    return function (dispatch) {
-        dispatch({ type: actionType });
+  return function (dispatch) {
+    dispatch({ type: actionType });
 
-        fetch('' + _config2.default.SERVER_URI + uri, options).then(function (response) {
-            return response.json();
-        }).then(function (data) {
-            return dispatch({ type: actionType + '_SUCCESSFUL', payload: data });
-        }).then(function () {
-            if (additionalAction) dispatch(additionalAction);
-        });
-    };
+    fetch('' + _config2.default.SERVER_URI + uri, options).then(function (response) {
+      return response.json();
+    }).then(function (data) {
+      return dispatch({ type: actionType + '_SUCCESSFUL', payload: data });
+    }).then(function () {
+      if (additionalAction) dispatch(additionalAction);
+    });
+  };
 };
 
-// export const fetchInvoicesList = () => {
-//     return asyncFetch(types.FETCH_INVOICES, '/invoices');
-// };
-
 var fetchInvoicesList = exports.fetchInvoicesList = function fetchInvoicesList() {
-    return {
-        type: types.FETCH_INVOICES
-    };
+  return {
+    type: types.FETCH_INVOICES
+  };
 };
 
 var receiveInvoicesList = exports.receiveInvoicesList = function receiveInvoicesList(invoices) {
-    return {
-        type: types.FETCH_INVOICES_SUCCESSFUL,
-        payload: invoices
-    };
+  return {
+    type: types.FETCH_INVOICES_SUCCESSFUL,
+    payload: invoices
+  };
 };
 
 var fetchProductsList = exports.fetchProductsList = function fetchProductsList() {
-    return asyncFetch(types.FETCH_PRODUCTS, '/products');
+  return {
+    type: types.FETCH_PRODUCTS
+  };
+};
+
+var receiveProductsList = exports.receiveProductsList = function receiveProductsList(products) {
+  return {
+    type: types.FETCH_PRODUCTS_SUCCESSFUL,
+    payload: products
+  };
 };
 
 var pushInvoice = exports.pushInvoice = function pushInvoice(invoice) {
-    return invoice.id ? updateInvoice(invoice) : createInvoice(invoice);
+  return invoice.id ? updateInvoice(invoice) : createInvoice(invoice);
 };
 
 var createInvoice = exports.createInvoice = function createInvoice(invoice) {
-    return asyncFetch(types.PUSH_INVOICE, '/invoices', {
-        method: 'post',
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(invoice)
-    });
+  return asyncFetch(types.PUSH_INVOICE, '/invoices', {
+    method: 'post',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(invoice)
+  });
 };
 
 // export const createInvoice = invoice => {
@@ -1455,206 +1460,200 @@ var createInvoice = exports.createInvoice = function createInvoice(invoice) {
 //     }
 // }
 
-
-// export const deleteInvoice = invoiceId => {
-//     return asyncFetch(types.DELETE_INVOICE,
-//         `/invoices/${invoiceId}`, {
-//             method: 'delete'
-//         });
-// };
-
 var deleteInvoice = exports.deleteInvoice = function deleteInvoice(invoiceId) {
-    return {
-        type: types.DELETE_INVOICE,
-        payload: invoiceId
-    };
+  return {
+    type: types.DELETE_INVOICE,
+    payload: invoiceId
+  };
 };
 
 var deleteInvoiceSuccessful = exports.deleteInvoiceSuccessful = function deleteInvoiceSuccessful(invoiceId) {
-    return {
-        type: types.DELETE_INVOICE_SUCCESSFUL,
-        payload: invoiceId
-    };
+  return {
+    type: types.DELETE_INVOICE_SUCCESSFUL,
+    payload: invoiceId
+  };
 };
 
 var setInvoiceActive = exports.setInvoiceActive = function setInvoiceActive(id) {
-    return {
-        type: types.SET_INVOICE_ACTIVE,
-        payload: { id: id }
-    };
+  return {
+    type: types.SET_INVOICE_ACTIVE,
+    payload: { id: id }
+  };
 };
 
 var updateInvoice = exports.updateInvoice = function updateInvoice(invoice) {
-    return asyncFetch(types.PUSH_INVOICE, '/invoices/' + invoice.id, {
-        method: 'put',
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(invoice)
-    }, fetchInvoicesList());
+  return asyncFetch(types.PUSH_INVOICE, '/invoices/' + invoice.id, {
+    method: 'put',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(invoice)
+  }, fetchInvoicesList());
 };
 
 var updateInvoiceDetails = exports.updateInvoiceDetails = function updateInvoiceDetails(field, value) {
-    return function (dispatch) {
-        Promise.resolve(dispatch({
-            type: types.UPDATE_INVOICE_DETAILS,
-            payload: { field: field, value: value }
-        })).then(function () {
-            return dispatch(recalculateTotal());
-        }).then(function () {
-            return dispatch(fetchInvoicesList());
-        });
-    };
+  return function (dispatch) {
+    Promise.resolve(dispatch({
+      type: types.UPDATE_INVOICE_DETAILS,
+      payload: { field: field, value: value }
+    })).then(function () {
+      return dispatch(recalculateTotal());
+    }).then(function () {
+      return dispatch(fetchInvoicesList());
+    });
+  };
 };
 
-// export const addInvoiceItem = (invoiceId, productId, quantity) => {
-//     return dispatch => {
-//         dispatch(asyncFetch(types.ADD_INVOICE_ITEM,
-//             `/invoices/${invoiceId}/items`, {
-//                 method: 'post',
-//                 headers: {
-//                     'Accept': 'application/json',
-//                     'Content-Type': 'application/json'
-//                 },
-//                 body: JSON.stringify({
-//                     'product_id': productId,
-//                     'quantity': quantity
-//                 })
-//             }, recalculateTotal())
-//         );
-//     }
-// };
-
 var addInvoiceItem = exports.addInvoiceItem = function addInvoiceItem(invoiceId, productId, quantity) {
-    return {
-        type: types.ADD_INVOICE_ITEM,
-        payload: { invoiceId: invoiceId, productId: productId, quantity: quantity }
-    };
+  return {
+    type: types.ADD_INVOICE_ITEM,
+    payload: { invoiceId: invoiceId, productId: productId, quantity: quantity }
+  };
 };
 
 var addInvoiceItemSuccessfull = exports.addInvoiceItemSuccessfull = function addInvoiceItemSuccessfull(invoiceData) {
-    return {
-        type: types.ADD_INVOICE_ITEM_SUCCESSFUL,
-        payload: invoiceData
-    };
+  return {
+    type: types.ADD_INVOICE_ITEM_SUCCESSFUL,
+    payload: invoiceData
+  };
 };
 
 var fetchInvoiceItems = exports.fetchInvoiceItems = function fetchInvoiceItems(invoiceId) {
-    return asyncFetch(types.FETCH_INVOICE_ITEMS, '/invoices/' + invoiceId + '/items');
+  return {
+    type: types.FETCH_INVOICE_ITEMS,
+    payload: invoiceId
+  };
+};
+
+var receiveInvoiceItems = exports.receiveInvoiceItems = function receiveInvoiceItems(invoiceItems) {
+  return {
+    type: types.FETCH_INVOICE_ITEMS_SUCCESSFUL,
+    payload: invoiceItems
+  };
 };
 
 var updateInvoiceItem = exports.updateInvoiceItem = function updateInvoiceItem(invoiceId, invoiceItemId, newQuantity) {
-    return asyncFetch(types.UPDATE_INVOICE_ITEMS_QUANTITY, '/invoices/' + invoiceId + '/items/' + invoiceItemId, {
-        method: 'put',
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            'quantity': newQuantity
-        })
-    }, recalculateTotal());
+  return asyncFetch(types.UPDATE_INVOICE_ITEMS_QUANTITY, '/invoices/' + invoiceId + '/items/' + invoiceItemId, {
+    method: 'put',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      quantity: newQuantity
+    })
+  }, recalculateTotal());
 };
 
 var deleteInvoiceItem = exports.deleteInvoiceItem = function deleteInvoiceItem(invoiceId, itemId) {
-    return asyncFetch(types.DELETE_INVOICE_ITEM, '/invoices/' + invoiceId + '/items/' + itemId, {
-        method: 'delete'
-    }, recalculateTotal());
+  return asyncFetch(types.DELETE_INVOICE_ITEM, '/invoices/' + invoiceId + '/items/' + itemId, {
+    method: 'delete'
+  }, recalculateTotal());
 };
 
 var fetchInvoiceDetails = exports.fetchInvoiceDetails = function fetchInvoiceDetails(invoiceId) {
-    return asyncFetch(types.FETCH_INVOICE_DETAILS, '/invoices/' + invoiceId);
+  return {
+    type: types.FETCH_INVOICE_DETAILS,
+    payload: invoiceId
+  };
+};
+
+var receiveInvoiceDetails = exports.receiveInvoiceDetails = function receiveInvoiceDetails(invoiceDetails) {
+  return {
+    type: types.FETCH_INVOICE_DETAILS_SUCCESSFUL,
+    payload: invoiceDetails
+  };
 };
 
 var recalculateTotal = exports.recalculateTotal = function recalculateTotal() {
-    return function (dispatch, getState) {
-        var _getState$InvoiceDeta = getState().InvoiceDetails,
-            invoiceItems = _getState$InvoiceDeta.invoiceItems,
-            products = _getState$InvoiceDeta.products,
-            discount = _getState$InvoiceDeta.invoice.discount;
+  return function (dispatch, getState) {
+    var _getState$InvoiceDeta = getState().InvoiceDetails,
+        invoiceItems = _getState$InvoiceDeta.invoiceItems,
+        products = _getState$InvoiceDeta.products,
+        discount = _getState$InvoiceDeta.invoice.discount;
 
 
-        Promise.resolve(dispatch({
-            type: types.RECALCULATE_TOTAL,
-            payload: { invoiceItems: invoiceItems, products: products, discount: discount }
-        })).then(function () {
-            dispatch(pushInvoice(getState().InvoiceDetails.invoice));
-        });
-    };
+    Promise.resolve(dispatch({
+      type: types.RECALCULATE_TOTAL,
+      payload: { invoiceItems: invoiceItems, products: products, discount: discount }
+    })).then(function () {
+      dispatch(pushInvoice(getState().InvoiceDetails.invoice));
+    });
+  };
 };
 
 var clearInvoiceDetails = exports.clearInvoiceDetails = function clearInvoiceDetails() {
-    return {
-        type: types.CLEAR_INVOICE_DETAILS
-    };
+  return {
+    type: types.CLEAR_INVOICE_DETAILS
+  };
 };
 
 var clearInvoiceDetailsFetchData = exports.clearInvoiceDetailsFetchData = function clearInvoiceDetailsFetchData() {
-    return function (dispatch) {
-        Promise.resolve(dispatch({
-            type: types.CLEAR_INVOICE_DETAILS_FETCH_DATA
-        })).then(dispatch(clearInvoiceDetails())).then(dispatch(fetchProductsList()));
-    };
+  return function (dispatch) {
+    Promise.resolve(dispatch({
+      type: types.CLEAR_INVOICE_DETAILS_FETCH_DATA
+    })).then(dispatch(clearInvoiceDetails())).then(dispatch(fetchProductsList()));
+  };
 };
 
 var pushProduct = exports.pushProduct = function pushProduct(product) {
-    return product.id ? updateProduct(product) : createProduct(product);
+  return product.id ? updateProduct(product) : createProduct(product);
 };
 
 var createProduct = exports.createProduct = function createProduct(product) {
-    return asyncFetch(types.PUSH_PRODUCT, '/products', {
-        method: 'post',
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(product)
-    });
+  return asyncFetch(types.PUSH_PRODUCT, '/products', {
+    method: 'post',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(product)
+  });
 };
 
 var updateProduct = exports.updateProduct = function updateProduct(product) {
-    return asyncFetch(types.PUSH_PRODUCT, '/products/' + product.id, {
-        method: 'put',
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(product)
-    }, fetchProductsList());
+  return asyncFetch(types.PUSH_PRODUCT, '/products/' + product.id, {
+    method: 'put',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(product)
+  }, fetchProductsList());
 };
 
 var updateProductDetails = exports.updateProductDetails = function updateProductDetails(field, value) {
-    return function (dispatch, getState) {
-        Promise.resolve(dispatch({
-            type: types.UPDATE_PRODUCT_DETAILS,
-            payload: { field: field, value: value }
-        })).then(function () {
-            return dispatch(pushProduct(getState().ProductsList.productDetails));
-        }).then(function () {
-            return dispatch(fetchProductsList());
-        });
-    };
+  return function (dispatch, getState) {
+    Promise.resolve(dispatch({
+      type: types.UPDATE_PRODUCT_DETAILS,
+      payload: { field: field, value: value }
+    })).then(function () {
+      return dispatch(pushProduct(getState().ProductsList.productDetails));
+    }).then(function () {
+      return dispatch(fetchProductsList());
+    });
+  };
 };
 
 var deleteProduct = exports.deleteProduct = function deleteProduct(productId) {
-    return asyncFetch(types.DELETE_PRODUCT, '/products/' + productId, {
-        method: 'delete'
-    });
+  return asyncFetch(types.DELETE_PRODUCT, '/products/' + productId, {
+    method: 'delete'
+  });
 };
 
 var setProductActive = exports.setProductActive = function setProductActive(id) {
-    return {
-        type: types.SET_PRODUCT_ACTIVE,
-        payload: { id: id }
-    };
+  return {
+    type: types.SET_PRODUCT_ACTIVE,
+    payload: { id: id }
+  };
 };
 
 var fetchProductDetails = exports.fetchProductDetails = function fetchProductDetails(id) {
-    return {
-        type: types.FETCH_PRODUCT_DETAILS,
-        payload: { id: id }
-    };
+  return {
+    type: types.FETCH_PRODUCT_DETAILS,
+    payload: { id: id }
+  };
 };
 
 /***/ }),
@@ -48120,7 +48119,7 @@ function arrayOfDeferred(length) {
 
 
 Object.defineProperty(exports, "__esModule", {
-    value: true
+  value: true
 });
 exports.default = rootSaga;
 
@@ -48134,24 +48133,30 @@ var _InvoicesDetailsSagas = __webpack_require__(296);
 
 var _AddInvoiceItemSagas = __webpack_require__(297);
 
+var _ProductsSagas = __webpack_require__(315);
+
+var _InvoiceItemsSagas = __webpack_require__(316);
+
+var _InvoiceDetailsSagas = __webpack_require__(317);
+
 var _marked = /*#__PURE__*/regeneratorRuntime.mark(rootSaga);
 
 function rootSaga() {
-    return regeneratorRuntime.wrap(function rootSaga$(_context) {
-        while (1) {
-            switch (_context.prev = _context.next) {
-                case 0:
-                    _context.next = 2;
-                    return (0, _effects.all)([(0, _InvoicesSagas.watchFetchInvoices)(), (0, _InvoiceDeleteSagas.watchDeleteInvoice)(), (0, _AddInvoiceItemSagas.watchAddInvoiceItem)()
-                    // watchCreateInvoice()
-                    ]);
+  return regeneratorRuntime.wrap(function rootSaga$(_context) {
+    while (1) {
+      switch (_context.prev = _context.next) {
+        case 0:
+          _context.next = 2;
+          return (0, _effects.all)([(0, _InvoicesSagas.watchFetchInvoices)(), (0, _InvoiceDeleteSagas.watchDeleteInvoice)(), (0, _AddInvoiceItemSagas.watchAddInvoiceItem)(), (0, _ProductsSagas.watchFetchProducts)(), (0, _InvoiceItemsSagas.watchFetchInvoiceItems)(), (0, _InvoiceDetailsSagas.watchFetchInvoiceDetails)()]
+          // watchCreateInvoice()
+          );
 
-                case 2:
-                case 'end':
-                    return _context.stop();
-            }
-        }
-    }, _marked, this);
+        case 2:
+        case 'end':
+          return _context.stop();
+      }
+    }
+  }, _marked, this);
 }
 
 /***/ }),
@@ -51370,6 +51375,300 @@ var ErrorLink = /** @class */ (function (_super) {
 }(__WEBPACK_IMPORTED_MODULE_0_apollo_link__["ApolloLink"]));
 
 //# sourceMappingURL=index.js.map
+
+/***/ }),
+/* 315 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.watchFetchProducts = watchFetchProducts;
+exports.callFetchProductsList = callFetchProductsList;
+
+__webpack_require__(29);
+
+var _axios = __webpack_require__(37);
+
+var _axios2 = _interopRequireDefault(_axios);
+
+var _effects = __webpack_require__(22);
+
+var _types = __webpack_require__(6);
+
+var _index = __webpack_require__(15);
+
+var _config = __webpack_require__(16);
+
+var _config2 = _interopRequireDefault(_config);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var _marked = /*#__PURE__*/regeneratorRuntime.mark(watchFetchProducts),
+    _marked2 = /*#__PURE__*/regeneratorRuntime.mark(callFetchProductsList);
+
+// move to the separate api folder
+var fetchProductsApi = function fetchProductsApi() {
+  return new Promise(function (resolve, reject) {
+    _axios2.default.get(_config2.default.SERVER_URI + '/products').then(function (response) {
+      return resolve(response);
+    }).catch(function (error) {
+      return reject(error.response.status);
+    });
+  });
+};
+
+// api end
+
+function watchFetchProducts() {
+  return regeneratorRuntime.wrap(function watchFetchProducts$(_context) {
+    while (1) {
+      switch (_context.prev = _context.next) {
+        case 0:
+          _context.next = 2;
+          return (0, _effects.takeLatest)([
+          // CLEAR_INVOICE_DETAILS_FETCH_DATA,
+          // UPDATE_INVOICE_DETAILS,
+          // UPDATE_PRODUCT_DETAILS,
+          // PUSH_PRODUCT,
+          // RECALCULATE_TOTAL,
+          _types.FETCH_PRODUCTS], callFetchProductsList);
+
+        case 2:
+        case 'end':
+          return _context.stop();
+      }
+    }
+  }, _marked, this);
+}
+
+function callFetchProductsList() {
+  var response;
+  return regeneratorRuntime.wrap(function callFetchProductsList$(_context2) {
+    while (1) {
+      switch (_context2.prev = _context2.next) {
+        case 0:
+          _context2.prev = 0;
+          _context2.next = 3;
+          return (0, _effects.call)(fetchProductsApi);
+
+        case 3:
+          response = _context2.sent;
+          _context2.next = 6;
+          return (0, _effects.put)((0, _index.receiveProductsList)(response.data));
+
+        case 6:
+          _context2.next = 11;
+          break;
+
+        case 8:
+          _context2.prev = 8;
+          _context2.t0 = _context2['catch'](0);
+
+          console.error('-----------', _context2.t0);
+
+        case 11:
+        case 'end':
+          return _context2.stop();
+      }
+    }
+  }, _marked2, this, [[0, 8]]);
+}
+
+/***/ }),
+/* 316 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.watchFetchInvoiceItems = watchFetchInvoiceItems;
+exports.callFetchInvoiceItems = callFetchInvoiceItems;
+
+__webpack_require__(29);
+
+var _axios = __webpack_require__(37);
+
+var _axios2 = _interopRequireDefault(_axios);
+
+var _effects = __webpack_require__(22);
+
+var _types = __webpack_require__(6);
+
+var _index = __webpack_require__(15);
+
+var _config = __webpack_require__(16);
+
+var _config2 = _interopRequireDefault(_config);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var _marked = /*#__PURE__*/regeneratorRuntime.mark(watchFetchInvoiceItems),
+    _marked2 = /*#__PURE__*/regeneratorRuntime.mark(callFetchInvoiceItems);
+
+// move to the separate api folder
+var fetchInvoiceItemsApi = function fetchInvoiceItemsApi(invoiceId) {
+  return new Promise(function (resolve, reject) {
+    _axios2.default.get(_config2.default.SERVER_URI + '/invoices/' + invoiceId + '/items').then(function (response) {
+      return resolve(response);
+    }).catch(function (error) {
+      return reject(error.response.status);
+    });
+  });
+};
+
+// api end
+
+function watchFetchInvoiceItems() {
+  return regeneratorRuntime.wrap(function watchFetchInvoiceItems$(_context) {
+    while (1) {
+      switch (_context.prev = _context.next) {
+        case 0:
+          _context.next = 2;
+          return (0, _effects.takeLatest)([_types.FETCH_INVOICE_ITEMS], callFetchInvoiceItems);
+
+        case 2:
+        case 'end':
+          return _context.stop();
+      }
+    }
+  }, _marked, this);
+}
+
+function callFetchInvoiceItems(action) {
+  var response;
+  return regeneratorRuntime.wrap(function callFetchInvoiceItems$(_context2) {
+    while (1) {
+      switch (_context2.prev = _context2.next) {
+        case 0:
+          _context2.prev = 0;
+          _context2.next = 3;
+          return (0, _effects.call)(fetchInvoiceItemsApi, action.payload);
+
+        case 3:
+          response = _context2.sent;
+          _context2.next = 6;
+          return (0, _effects.put)((0, _index.receiveInvoiceItems)(response.data));
+
+        case 6:
+          _context2.next = 11;
+          break;
+
+        case 8:
+          _context2.prev = 8;
+          _context2.t0 = _context2['catch'](0);
+
+          console.error('-----------', _context2.t0);
+
+        case 11:
+        case 'end':
+          return _context2.stop();
+      }
+    }
+  }, _marked2, this, [[0, 8]]);
+}
+
+/***/ }),
+/* 317 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.watchFetchInvoiceDetails = watchFetchInvoiceDetails;
+exports.callFetchInvoiceDetails = callFetchInvoiceDetails;
+
+__webpack_require__(29);
+
+var _axios = __webpack_require__(37);
+
+var _axios2 = _interopRequireDefault(_axios);
+
+var _effects = __webpack_require__(22);
+
+var _types = __webpack_require__(6);
+
+var _index = __webpack_require__(15);
+
+var _config = __webpack_require__(16);
+
+var _config2 = _interopRequireDefault(_config);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var _marked = /*#__PURE__*/regeneratorRuntime.mark(watchFetchInvoiceDetails),
+    _marked2 = /*#__PURE__*/regeneratorRuntime.mark(callFetchInvoiceDetails);
+
+// move to the separate api folder
+var fetchInvoiceDetailsApi = function fetchInvoiceDetailsApi(invoiceId) {
+  return new Promise(function (resolve, reject) {
+    _axios2.default.get(_config2.default.SERVER_URI + '/invoices/' + invoiceId).then(function (response) {
+      return resolve(response);
+    }).catch(function (error) {
+      return reject(error.response.status);
+    });
+  });
+};
+
+// api end
+
+function watchFetchInvoiceDetails() {
+  return regeneratorRuntime.wrap(function watchFetchInvoiceDetails$(_context) {
+    while (1) {
+      switch (_context.prev = _context.next) {
+        case 0:
+          _context.next = 2;
+          return (0, _effects.takeLatest)([_types.FETCH_INVOICE_DETAILS], callFetchInvoiceDetails);
+
+        case 2:
+        case 'end':
+          return _context.stop();
+      }
+    }
+  }, _marked, this);
+}
+
+function callFetchInvoiceDetails(action) {
+  var response;
+  return regeneratorRuntime.wrap(function callFetchInvoiceDetails$(_context2) {
+    while (1) {
+      switch (_context2.prev = _context2.next) {
+        case 0:
+          _context2.prev = 0;
+          _context2.next = 3;
+          return (0, _effects.call)(fetchInvoiceDetailsApi, action.payload);
+
+        case 3:
+          response = _context2.sent;
+          _context2.next = 6;
+          return (0, _effects.put)((0, _index.receiveInvoiceDetails)(response.data));
+
+        case 6:
+          _context2.next = 11;
+          break;
+
+        case 8:
+          _context2.prev = 8;
+          _context2.t0 = _context2['catch'](0);
+
+          console.error('-----------', _context2.t0);
+
+        case 11:
+        case 'end':
+          return _context2.stop();
+      }
+    }
+  }, _marked2, this, [[0, 8]]);
+}
 
 /***/ })
 /******/ ]);
