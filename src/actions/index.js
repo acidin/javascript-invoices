@@ -57,19 +57,19 @@ export const createInvoice = (invoice) => {
   });
 };
 
-// export const createInvoice = invoice => {
-//     return {
-//         type: types.PUSH_INVOICE,
-//         payload: invoice
-//     }
+// export const createInvoice = (invoice) => {
+//   return {
+//     type: types.PUSH_INVOICE,
+//     payload: invoice,
+//   };
 // };
 
-// export const createInvoiceSuccessful = invoice => {
-//     return {
-//         type: types.PUSH_INVOICE_SUCCESSFUL,
-//         payload: invoice
-//     }
-// }
+// export const createInvoiceSuccessful = (invoice) => {
+//   return {
+//     type: types.PUSH_INVOICE_SUCCESSFUL,
+//     payload: invoice,
+//   };
+// };
 
 export const deleteInvoice = (invoiceId) => {
   return {
@@ -92,32 +92,53 @@ export const setInvoiceActive = (id) => {
   };
 };
 
+// export const updateInvoice = (invoice) => {
+//   return asyncFetch(
+//     types.PUSH_INVOICE,
+//     `/invoices/${invoice.id}`,
+//     {
+//       method: 'put',
+//       headers: {
+//         Accept: 'application/json',
+//         'Content-Type': 'application/json',
+//       },
+//       body: JSON.stringify(invoice),
+//     },
+//     fetchInvoicesList()
+//   );
+// };
+
 export const updateInvoice = (invoice) => {
-  return asyncFetch(
-    types.PUSH_INVOICE,
-    `/invoices/${invoice.id}`,
-    {
-      method: 'put',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(invoice),
-    },
-    fetchInvoicesList()
-  );
+  return {
+    type: types.PUSH_INVOICE,
+    payload: invoice,
+  };
 };
 
+export const updateInvoiceSuccessful = (invoice) => {
+  return {
+    type: types.PUSH_INVOICE_SUCCESSFUL,
+    payload: invoice,
+  };
+};
+
+// export const updateInvoiceDetails = (field, value) => {
+//   return (dispatch) => {
+//     Promise.resolve(
+//       dispatch({
+//         type: types.UPDATE_INVOICE_DETAILS,
+//         payload: { field, value },
+//       })
+//     )
+//       .then(() => dispatch(recalculateTotal()))
+//       .then(() => dispatch(fetchInvoicesList()));
+//   };
+// };
+
 export const updateInvoiceDetails = (field, value) => {
-  return (dispatch) => {
-    Promise.resolve(
-      dispatch({
-        type: types.UPDATE_INVOICE_DETAILS,
-        payload: { field, value },
-      })
-    )
-      .then(() => dispatch(recalculateTotal()))
-      .then(() => dispatch(fetchInvoicesList()));
+  return {
+    type: types.UPDATE_INVOICE_DETAILS,
+    payload: { field, value },
   };
 };
 
