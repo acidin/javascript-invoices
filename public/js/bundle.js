@@ -1533,10 +1533,10 @@ var addInvoiceItem = exports.addInvoiceItem = function addInvoiceItem(invoiceId,
     };
 };
 
-var addInvoiceItemSuccessfull = exports.addInvoiceItemSuccessfull = function addInvoiceItemSuccessfull(invoiceId, productId, quantity) {
+var addInvoiceItemSuccessfull = exports.addInvoiceItemSuccessfull = function addInvoiceItemSuccessfull(invoiceData) {
     return {
         type: types.ADD_INVOICE_ITEM_SUCCESSFUL,
-        payload: { invoiceId: invoiceId, productId: productId, quantity: quantity }
+        payload: invoiceData
     };
 };
 
@@ -43861,7 +43861,7 @@ exports.default = InvoicesReducer;
 
 
 Object.defineProperty(exports, "__esModule", {
-    value: true
+  value: true
 });
 
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
@@ -43877,93 +43877,93 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 var INIT_STATE = {
-    invoice: {
-        discount: 0,
-        sum: 0
-    },
-    customers: [],
-    products: {},
-    invoiceItems: [],
-    activeInvoiceId: null
+  invoice: {
+    discount: 0,
+    sum: 0
+  },
+  customers: [],
+  products: {},
+  invoiceItems: [],
+  activeInvoiceId: null
 };
 
 var InvoiceDetailsReducer = function InvoiceDetailsReducer() {
-    var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : INIT_STATE;
-    var action = arguments[1];
+  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : INIT_STATE;
+  var action = arguments[1];
 
-    switch (action.type) {
-        case types.FETCH_PRODUCTS_SUCCESSFUL:
-            return _extends({}, state, {
-                products: action.payload
-            });
-        case types.PUSH_INVOICE_SUCCESSFUL:
-            return _extends({}, state, {
-                invoice: _extends({}, state.invoice, { id: action.payload.id }),
-                activeInvoiceId: action.payload.id
-            });
-        case types.FETCH_INVOICE_DETAILS_SUCCESSFUL:
-            return _extends({}, state, {
-                invoice: action.payload
-            });
-        case types.UPDATE_INVOICE_DETAILS:
-            return _extends({}, state, {
-                invoice: _extends({}, state.invoice, _defineProperty({}, action.payload.field, action.payload.value)),
-                activeInvoiceId: invoiceItems && invoiceItems[0] && parseInt(invoiceItems[0].invoice_id)
-            });
-        case types.ADD_INVOICE_ITEM_SUCCESSFUL:
-            return _extends({}, state, {
-                invoiceItems: [].concat(_toConsumableArray(state.invoiceItems), [action.payload])
-            });
-        case types.FETCH_INVOICE_ITEMS_SUCCESSFUL:
-            return _extends({}, state, {
-                invoiceItems: Object.values(action.payload)
-            });
-        case types.DELETE_INVOICE_ITEM_SUCCESSFUL:
-            return _extends({}, state, {
-                invoiceItems: state.invoiceItems.filter(function (item) {
-                    return item.id !== action.payload.id;
-                })
-            });
-        case types.UPDATE_INVOICE_ITEMS_QUANTITY_SUCCESSFUL:
-            var updatedItem = action.payload,
-                updatedItemsList = state.invoiceItems.map(function (invoiceItem) {
-                return invoiceItem.id === updatedItem.id ? updatedItem : invoiceItem;
-            });
+  switch (action.type) {
+    case types.FETCH_PRODUCTS_SUCCESSFUL:
+      return _extends({}, state, {
+        products: action.payload
+      });
+    case types.PUSH_INVOICE_SUCCESSFUL:
+      return _extends({}, state, {
+        invoice: _extends({}, state.invoice, { id: action.payload.id }),
+        activeInvoiceId: action.payload.id
+      });
+    case types.FETCH_INVOICE_DETAILS_SUCCESSFUL:
+      return _extends({}, state, {
+        invoice: action.payload
+      });
+    case types.UPDATE_INVOICE_DETAILS:
+      return _extends({}, state, {
+        invoice: _extends({}, state.invoice, _defineProperty({}, action.payload.field, action.payload.value)),
+        activeInvoiceId: invoiceItems && invoiceItems[0] && parseInt(invoiceItems[0].invoice_id)
+      });
+    case types.ADD_INVOICE_ITEM_SUCCESSFUL:
+      return _extends({}, state, {
+        invoiceItems: [].concat(_toConsumableArray(state.invoiceItems), [action.payload])
+      });
+    case types.FETCH_INVOICE_ITEMS_SUCCESSFUL:
+      return _extends({}, state, {
+        invoiceItems: Object.values(action.payload)
+      });
+    case types.DELETE_INVOICE_ITEM_SUCCESSFUL:
+      return _extends({}, state, {
+        invoiceItems: state.invoiceItems.filter(function (item) {
+          return item.id !== action.payload.id;
+        })
+      });
+    case types.UPDATE_INVOICE_ITEMS_QUANTITY_SUCCESSFUL:
+      var updatedItem = action.payload,
+          updatedItemsList = state.invoiceItems.map(function (invoiceItem) {
+        return invoiceItem.id === updatedItem.id ? updatedItem : invoiceItem;
+      });
 
-            return _extends({}, state, {
-                invoiceItems: updatedItemsList
-            });
-        case types.RECALCULATE_TOTAL:
-            var _action$payload = action.payload,
-                invoiceItems = _action$payload.invoiceItems,
-                discount = _action$payload.discount,
-                products = _action$payload.products,
-                newTotal = invoiceItems.reduce(function (total, item) {
-                return total + item.quantity * products.find(function (p) {
-                    return p.id === item.product_id;
-                }).price;
-            }, 0) * (1 - discount / 100);
+      return _extends({}, state, {
+        invoiceItems: updatedItemsList
+      });
+    case types.RECALCULATE_TOTAL:
+      var _action$payload = action.payload,
+          invoiceItems = _action$payload.invoiceItems,
+          discount = _action$payload.discount,
+          products = _action$payload.products,
+          newTotal = invoiceItems.reduce(function (total, item) {
+        return total + item.quantity * products.find(function (p) {
+          return p.id === item.product_id;
+        }).price;
+      }, 0) * (1 - discount / 100);
 
 
-            return _extends({}, state, {
-                invoice: _extends({}, state.invoice, {
-                    total: newTotal.toFixed(2)
-                }),
-                activeInvoiceId: invoiceItems && invoiceItems[0] && parseInt(invoiceItems[0].invoice_id)
-            });
-        case types.CLEAR_INVOICE_DETAILS:
-            return INIT_STATE;
+      return _extends({}, state, {
+        invoice: _extends({}, state.invoice, {
+          total: newTotal.toFixed(2)
+        }),
+        activeInvoiceId: invoiceItems && invoiceItems[0] && parseInt(invoiceItems[0].invoice_id)
+      });
+    case types.CLEAR_INVOICE_DETAILS:
+      return INIT_STATE;
 
-        case types.CLEAR_INVOICE_DETAILS_FETCH_DATA:
-            return state;
+    case types.CLEAR_INVOICE_DETAILS_FETCH_DATA:
+      return state;
 
-        case types.SET_INVOICE_ACTIVE:
-            return _extends({}, state, {
-                activeInvoiceId: action.payload.id
-            });
-    }
+    case types.SET_INVOICE_ACTIVE:
+      return _extends({}, state, {
+        activeInvoiceId: action.payload.id
+      });
+  }
 
-    return state;
+  return state;
 };
 
 exports.default = InvoiceDetailsReducer;
@@ -49658,7 +49658,7 @@ function callPushInvoice(action) {
 
 
 Object.defineProperty(exports, "__esModule", {
-    value: true
+  value: true
 });
 exports.watchAddInvoiceItem = watchAddInvoiceItem;
 exports.callAddInvoiceItem = callAddInvoiceItem;
@@ -49688,80 +49688,80 @@ var _marked = /*#__PURE__*/regeneratorRuntime.mark(watchAddInvoiceItem),
 
 // move to the separate api folder
 var addInvoiceItemApi = function addInvoiceItemApi(_ref) {
-    var invoiceId = _ref.invoiceId,
-        productId = _ref.productId,
-        quantity = _ref.quantity;
+  var invoiceId = _ref.invoiceId,
+      productId = _ref.productId,
+      quantity = _ref.quantity;
 
-    return new Promise(function (resolve, reject) {
-        _axios2.default.defaults.headers = {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-        };
+  return new Promise(function (resolve, reject) {
+    _axios2.default.defaults.headers = {
+      Accept: 'application/json',
+      'Content-Type': 'application/json'
+    };
 
-        _axios2.default.post(_config2.default.SERVER_URI + '/invoices/' + invoiceId + '/items', {
-            product_id: productId,
-            quantity: quantity
-        }).then(function (response) {
-            return resolve(response);
-        }).catch(function (error) {
-            return reject(error.response.status);
-        });
+    _axios2.default.post(_config2.default.SERVER_URI + '/invoices/' + invoiceId + '/items', {
+      product_id: productId,
+      quantity: quantity
+    }).then(function (response) {
+      return resolve(response);
+    }).catch(function (error) {
+      return reject(error.response.status);
     });
+  });
 };
 
 // api end
 
 function watchAddInvoiceItem() {
-    return regeneratorRuntime.wrap(function watchAddInvoiceItem$(_context) {
-        while (1) {
-            switch (_context.prev = _context.next) {
-                case 0:
-                    _context.next = 2;
-                    return (0, _effects.takeLatest)([_types.ADD_INVOICE_ITEM], callAddInvoiceItem);
+  return regeneratorRuntime.wrap(function watchAddInvoiceItem$(_context) {
+    while (1) {
+      switch (_context.prev = _context.next) {
+        case 0:
+          _context.next = 2;
+          return (0, _effects.takeLatest)([_types.ADD_INVOICE_ITEM], callAddInvoiceItem);
 
-                case 2:
-                case 'end':
-                    return _context.stop();
-            }
-        }
-    }, _marked, this);
+        case 2:
+        case 'end':
+          return _context.stop();
+      }
+    }
+  }, _marked, this);
 }
 
 function callAddInvoiceItem(action) {
-    var response;
-    return regeneratorRuntime.wrap(function callAddInvoiceItem$(_context2) {
-        while (1) {
-            switch (_context2.prev = _context2.next) {
-                case 0:
-                    _context2.prev = 0;
-                    _context2.next = 3;
-                    return (0, _effects.call)(addInvoiceItemApi, action.payload);
+  var response;
+  return regeneratorRuntime.wrap(function callAddInvoiceItem$(_context2) {
+    while (1) {
+      switch (_context2.prev = _context2.next) {
+        case 0:
+          _context2.prev = 0;
+          _context2.next = 3;
+          return (0, _effects.call)(addInvoiceItemApi, action.payload);
 
-                case 3:
-                    response = _context2.sent;
-                    _context2.next = 6;
-                    return (0, _effects.put)((0, _index.addInvoiceItemSuccessfull)(response.data));
+        case 3:
+          response = _context2.sent;
+          _context2.next = 6;
+          return (0, _effects.put)((0, _index.addInvoiceItemSuccessfull)(response.data));
 
-                case 6:
-                    _context2.next = 8;
-                    return (0, _effects.call)(_RecalculateTotalSagas.callRecalculateTotal);
+        case 6:
+          _context2.next = 8;
+          return (0, _effects.call)(_RecalculateTotalSagas.callRecalculateTotal);
 
-                case 8:
-                    _context2.next = 13;
-                    break;
+        case 8:
+          _context2.next = 13;
+          break;
 
-                case 10:
-                    _context2.prev = 10;
-                    _context2.t0 = _context2['catch'](0);
+        case 10:
+          _context2.prev = 10;
+          _context2.t0 = _context2['catch'](0);
 
-                    console.error('-----------', _context2.t0);
+          console.error('-----------', _context2.t0);
 
-                case 13:
-                case 'end':
-                    return _context2.stop();
-            }
-        }
-    }, _marked2, this, [[0, 10]]);
+        case 13:
+        case 'end':
+          return _context2.stop();
+      }
+    }
+  }, _marked2, this, [[0, 10]]);
 }
 
 /***/ }),

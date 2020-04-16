@@ -146,10 +146,10 @@ export const addInvoiceItem = (invoiceId, productId, quantity) => {
     }
 };
 
-export const addInvoiceItemSuccessfull = (invoiceId, productId, quantity) => {
+export const addInvoiceItemSuccessfull = (invoiceData) => {
     return {
         type: types.ADD_INVOICE_ITEM_SUCCESSFUL,
-        payload: {invoiceId, productId, quantity}
+        payload: invoiceData
     }
 };
 
