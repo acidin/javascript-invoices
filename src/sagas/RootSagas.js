@@ -1,4 +1,4 @@
-import { all, call } from 'redux-saga/effects';
+import { all } from 'redux-saga/effects';
 import { watchFetchInvoices } from './InvoicesSagas';
 import { watchDeleteInvoice } from './InvoiceDeleteSagas';
 import { watchCreateInvoice } from './CreateInvoiceSagas';
@@ -8,6 +8,9 @@ import { watchFetchProducts } from './ProductsSagas';
 import { watchFetchInvoiceItems } from './InvoiceItemsSagas';
 import { watchFetchInvoiceDetails } from './InvoiceDetailsSagas';
 import { watchUpdateInvoiceDetails } from './UpdateInvoiceDetailsSagas';
+import { watchUpdateInvoiceItem } from './UpdateInvoiceItemSagas';
+import { watchDeleteInvoiceItem } from './DeleteInvoiceItemSagas';
+import { watchClearInvoiceDetailsFetch } from './ClearInvoiceDetailsFetchDataSagas';
 
 export default function* rootSaga() {
   yield all([
@@ -20,5 +23,8 @@ export default function* rootSaga() {
     // watchCreateInvoice(),
     watchUpdateInvoice(),
     watchUpdateInvoiceDetails(),
+    watchUpdateInvoiceItem(),
+    watchDeleteInvoiceItem(),
+    watchClearInvoiceDetailsFetch(),
   ]);
 }

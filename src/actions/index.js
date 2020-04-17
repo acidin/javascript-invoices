@@ -170,33 +170,62 @@ export const receiveInvoiceItems = (invoiceItems) => {
   };
 };
 
+// export const updateInvoiceItem = (invoiceId, invoiceItemId, newQuantity) => {
+//   return asyncFetch(
+//     types.UPDATE_INVOICE_ITEMS_QUANTITY,
+//     `/invoices/${invoiceId}/items/${invoiceItemId}`,
+//     {
+//       method: 'put',
+//       headers: {
+//         Accept: 'application/json',
+//         'Content-Type': 'application/json',
+//       },
+//       body: JSON.stringify({
+//         quantity: newQuantity,
+//       }),
+//     },
+//     recalculateTotal()
+//   );
+// };
+
 export const updateInvoiceItem = (invoiceId, invoiceItemId, newQuantity) => {
-  return asyncFetch(
-    types.UPDATE_INVOICE_ITEMS_QUANTITY,
-    `/invoices/${invoiceId}/items/${invoiceItemId}`,
-    {
-      method: 'put',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        quantity: newQuantity,
-      }),
-    },
-    recalculateTotal()
-  );
+  return {
+    type: types.UPDATE_INVOICE_ITEMS_QUANTITY,
+    payload: { invoiceId, invoiceItemId, newQuantity },
+  };
 };
 
+export const updateInvoiceItemSuccessful = (updatedItem) => {
+  debugger;
+  return {
+    type: types.UPDATE_INVOICE_ITEMS_QUANTITY_SUCCESSFUL,
+    payload: updatedItem,
+  };
+};
+
+// export const deleteInvoiceItem = (invoiceId, itemId) => {
+//   return asyncFetch(
+//     types.DELETE_INVOICE_ITEM,
+//     `/invoices/${invoiceId}/items/${itemId}`,
+//     {
+//       method: 'delete',
+//     },
+//     recalculateTotal()
+//   );
+// };
+
 export const deleteInvoiceItem = (invoiceId, itemId) => {
-  return asyncFetch(
-    types.DELETE_INVOICE_ITEM,
-    `/invoices/${invoiceId}/items/${itemId}`,
-    {
-      method: 'delete',
-    },
-    recalculateTotal()
-  );
+  return {
+    type: types.DELETE_INVOICE_ITEM,
+    payload: { invoiceId, itemId },
+  };
+};
+
+export const deleteInvoiceItemSuccessful = (itemId) => {
+  return {
+    type: types.DELETE_INVOICE_ITEM_SUCCESSFUL,
+    payload: itemId,
+  };
 };
 
 export const fetchInvoiceDetails = (invoiceId) => {
@@ -238,78 +267,20 @@ export const clearInvoiceDetails = () => {
   };
 };
 
+// export const clearInvoiceDetailsFetchData = () => {
+//   return (dispatch) => {
+//     Promise.resolve(
+//       dispatch({
+//         type: types.CLEAR_INVOICE_DETAILS_FETCH_DATA,
+//       })
+//     )
+//       .then(dispatch(clearInvoiceDetails()))
+//       .then(dispatch(fetchProductsList()));
+//   };
+// };
+
 export const clearInvoiceDetailsFetchData = () => {
-  return (dispatch) => {
-    Promise.resolve(
-      dispatch({
-        type: types.CLEAR_INVOICE_DETAILS_FETCH_DATA,
-      })
-    )
-      .then(dispatch(clearInvoiceDetails()))
-      .then(dispatch(fetchProductsList()));
-  };
-};
-
-export const pushProduct = (product) => {
-  return product.id ? updateProduct(product) : createProduct(product);
-};
-
-export const createProduct = (product) => {
-  return asyncFetch(types.PUSH_PRODUCT, `/products`, {
-    method: 'post',
-    headers: {
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(product),
-  });
-};
-
-export const updateProduct = (product) => {
-  return asyncFetch(
-    types.PUSH_PRODUCT,
-    `/products/${product.id}`,
-    {
-      method: 'put',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(product),
-    },
-    fetchProductsList()
-  );
-};
-
-export const updateProductDetails = (field, value) => {
-  return (dispatch, getState) => {
-    Promise.resolve(
-      dispatch({
-        type: types.UPDATE_PRODUCT_DETAILS,
-        payload: { field, value },
-      })
-    )
-      .then(() => dispatch(pushProduct(getState().ProductsList.productDetails)))
-      .then(() => dispatch(fetchProductsList()));
-  };
-};
-
-export const deleteProduct = (productId) => {
-  return asyncFetch(types.DELETE_PRODUCT, `/products/${productId}`, {
-    method: 'delete',
-  });
-};
-
-export const setProductActive = (id) => {
   return {
-    type: types.SET_PRODUCT_ACTIVE,
-    payload: { id },
-  };
-};
-
-export const fetchProductDetails = (id) => {
-  return {
-    type: types.FETCH_PRODUCT_DETAILS,
-    payload: { id },
+    type: types.CLEAR_INVOICE_DETAILS_FETCH_DATA,
   };
 };
