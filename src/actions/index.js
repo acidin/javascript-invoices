@@ -43,19 +43,22 @@ export const receiveProductsList = (products) => {
 };
 
 export const pushInvoice = (invoice) => {
-  return invoice.id ? updateInvoice(invoice) : createInvoice(invoice);
+  return {
+    type: types.PUSH_INVOICE,
+    payload: invoice,
+  };
 };
 
-export const createInvoice = (invoice) => {
-  return asyncFetch(types.PUSH_INVOICE, `/invoices`, {
-    method: 'post',
-    headers: {
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(invoice),
-  });
-};
+// export const createInvoice = (invoice) => {
+//   return asyncFetch(types.PUSH_INVOICE, `/invoices`, {
+//     method: 'post',
+//     headers: {
+//       Accept: 'application/json',
+//       'Content-Type': 'application/json',
+//     },
+//     body: JSON.stringify(invoice),
+//   });
+// };
 
 // export const createInvoice = (invoice) => {
 //   return {
@@ -64,12 +67,12 @@ export const createInvoice = (invoice) => {
 //   };
 // };
 
-// export const createInvoiceSuccessful = (invoice) => {
-//   return {
-//     type: types.PUSH_INVOICE_SUCCESSFUL,
-//     payload: invoice,
-//   };
-// };
+export const createUpdateInvoiceSuccessful = (invoice) => {
+  return {
+    type: types.PUSH_INVOICE_SUCCESSFUL,
+    payload: invoice,
+  };
+};
 
 export const deleteInvoice = (invoiceId) => {
   return {
@@ -108,19 +111,19 @@ export const setInvoiceActive = (id) => {
 //   );
 // };
 
-export const updateInvoice = (invoice) => {
-  return {
-    type: types.PUSH_INVOICE,
-    payload: invoice,
-  };
-};
+// export const updateInvoice = (invoice) => {
+//   return {
+//     type: types.PUSH_INVOICE,
+//     payload: invoice,
+//   };
+// };
 
-export const updateInvoiceSuccessful = (invoice) => {
-  return {
-    type: types.PUSH_INVOICE_SUCCESSFUL,
-    payload: invoice,
-  };
-};
+// export const updateInvoiceSuccessful = (invoice) => {
+//   return {
+//     type: types.PUSH_INVOICE_SUCCESSFUL,
+//     payload: invoice,
+//   };
+// };
 
 // export const updateInvoiceDetails = (field, value) => {
 //   return (dispatch) => {
@@ -242,24 +245,24 @@ export const receiveInvoiceDetails = (invoiceDetails) => {
   };
 };
 
-export const recalculateTotal = () => {
-  return (dispatch, getState) => {
-    const {
-      invoiceItems,
-      products,
-      invoice: { discount },
-    } = getState().InvoiceDetails;
+// export const recalculateTotal = () => {
+//   return (dispatch, getState) => {
+//     const {
+//       invoiceItems,
+//       products,
+//       invoice: { discount },
+//     } = getState().InvoiceDetails;
 
-    Promise.resolve(
-      dispatch({
-        type: types.RECALCULATE_TOTAL,
-        payload: { invoiceItems, products, discount },
-      })
-    ).then(() => {
-      dispatch(pushInvoice(getState().InvoiceDetails.invoice));
-    });
-  };
-};
+//     Promise.resolve(
+//       dispatch({
+//         type: types.RECALCULATE_TOTAL,
+//         payload: { invoiceItems, products, discount },
+//       })
+//     ).then(() => {
+//       dispatch(pushInvoice(getState().InvoiceDetails.invoice));
+//     });
+//   };
+// };
 
 export const clearInvoiceDetails = () => {
   return {
