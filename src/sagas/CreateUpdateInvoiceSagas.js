@@ -25,7 +25,6 @@ const pushInvoiceApi = ({ customer_id, discount, sum }) => {
 };
 
 const updateInvoiceApi = ({ customer_id, discount, sum }) => {
-  debugger;
   return new Promise((resolve, reject) => {
     axios.defaults.headers = {
       Accept: 'application/json',
@@ -49,8 +48,6 @@ export function* watchCreateInvoice() {
 }
 
 function* callPushInvoice(action) {
-  debugger;
-  console.log('---action----', action);
   try {
     const invoice = action.payload,
       { id } = invoice;
@@ -59,11 +56,8 @@ function* callPushInvoice(action) {
 
     if (id) {
       response = yield call(updateInvoiceApi, invoice);
-      console.log('update invoice response', response);
     } else {
       response = yield call(pushInvoiceApi, invoice);
-
-      console.log('push invoice response', response);
     }
 
     yield put(createUpdateInvoiceSuccessful(response.data));

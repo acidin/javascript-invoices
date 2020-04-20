@@ -5,11 +5,9 @@ import { UPDATE_INVOICE_ITEMS_QUANTITY } from '../actions/types';
 import { updateInvoiceItemSuccessful } from '../actions/index';
 import config from '../config.json';
 import { callRecalculateTotal } from './RecalculateTotalSagas';
-// import { callFetchInvoices } from './InvoicesSagas';
 
 // move to the separate api folder
 const updateInvoiceItemApi = (invoiceId, invoiceItemId, newQuantity) => {
-  debugger;
   return new Promise((resolve, reject) => {
     axios.defaults.headers = {
       Accept: 'application/json',
@@ -43,12 +41,9 @@ function* callUpdateInvoiceItem(action) {
       newQuantity
     );
 
-    debugger;
     yield put(updateInvoiceItemSuccessful(response.data));
 
     yield call(callRecalculateTotal);
-
-    // yield call(callFetchInvoices);
   } catch (error) {
     console.error('----------- push invoice error', error);
   }

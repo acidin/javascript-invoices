@@ -713,7 +713,6 @@ var updateInvoiceItem = exports.updateInvoiceItem = function updateInvoiceItem(i
 };
 
 var updateInvoiceItemSuccessful = exports.updateInvoiceItemSuccessful = function updateInvoiceItemSuccessful(updatedItem) {
-  debugger;
   return {
     type: types.UPDATE_INVOICE_ITEMS_QUANTITY_SUCCESSFUL,
     payload: updatedItem
@@ -49683,7 +49682,6 @@ var updateInvoiceApi = function updateInvoiceApi(_ref2) {
       discount = _ref2.discount,
       sum = _ref2.sum;
 
-  debugger;
   return new Promise(function (resolve, reject) {
     _axios2.default.defaults.headers = {
       Accept: 'application/json',
@@ -49726,57 +49724,50 @@ function callPushInvoice(action) {
     while (1) {
       switch (_context2.prev = _context2.next) {
         case 0:
-          debugger;
-          console.log('---action----', action);
-          _context2.prev = 2;
+          _context2.prev = 0;
           _invoice = action.payload, id = _invoice.id;
           response = void 0;
 
           if (!id) {
-            _context2.next = 12;
+            _context2.next = 9;
             break;
           }
 
-          _context2.next = 8;
+          _context2.next = 6;
           return (0, _effects.call)(updateInvoiceApi, _invoice);
 
-        case 8:
+        case 6:
           response = _context2.sent;
-
-          console.log('update invoice response', response);
-          _context2.next = 16;
+          _context2.next = 12;
           break;
+
+        case 9:
+          _context2.next = 11;
+          return (0, _effects.call)(pushInvoiceApi, _invoice);
+
+        case 11:
+          response = _context2.sent;
 
         case 12:
           _context2.next = 14;
-          return (0, _effects.call)(pushInvoiceApi, _invoice);
-
-        case 14:
-          response = _context2.sent;
-
-
-          console.log('push invoice response', response);
-
-        case 16:
-          _context2.next = 18;
           return (0, _effects.put)((0, _index.createUpdateInvoiceSuccessful)(response.data));
 
-        case 18:
-          _context2.next = 23;
+        case 14:
+          _context2.next = 19;
           break;
 
-        case 20:
-          _context2.prev = 20;
-          _context2.t0 = _context2['catch'](2);
+        case 16:
+          _context2.prev = 16;
+          _context2.t0 = _context2['catch'](0);
 
           console.error('----------- push invoice error', _context2.t0);
 
-        case 23:
+        case 19:
         case 'end':
           return _context2.stop();
       }
     }
-  }, _marked2, this, [[2, 20]]);
+  }, _marked2, this, [[0, 16]]);
 }
 
 /***/ }),
@@ -50284,11 +50275,8 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 var _marked = /*#__PURE__*/regeneratorRuntime.mark(watchUpdateInvoiceItem),
     _marked2 = /*#__PURE__*/regeneratorRuntime.mark(callUpdateInvoiceItem);
 
-// import { callFetchInvoices } from './InvoicesSagas';
-
 // move to the separate api folder
 var updateInvoiceItemApi = function updateInvoiceItemApi(invoiceId, invoiceItemId, newQuantity) {
-  debugger;
   return new Promise(function (resolve, reject) {
     _axios2.default.defaults.headers = {
       Accept: 'application/json',
@@ -50336,32 +50324,29 @@ function callUpdateInvoiceItem(action) {
 
         case 4:
           response = _context2.sent;
-
-
-          debugger;
-          _context2.next = 8;
+          _context2.next = 7;
           return (0, _effects.put)((0, _index.updateInvoiceItemSuccessful)(response.data));
 
-        case 8:
-          _context2.next = 10;
+        case 7:
+          _context2.next = 9;
           return (0, _effects.call)(_RecalculateTotalSagas.callRecalculateTotal);
 
-        case 10:
-          _context2.next = 15;
+        case 9:
+          _context2.next = 14;
           break;
 
-        case 12:
-          _context2.prev = 12;
+        case 11:
+          _context2.prev = 11;
           _context2.t0 = _context2['catch'](0);
 
           console.error('----------- push invoice error', _context2.t0);
 
-        case 15:
+        case 14:
         case 'end':
           return _context2.stop();
       }
     }
-  }, _marked2, this, [[0, 12]]);
+  }, _marked2, this, [[0, 11]]);
 }
 
 /***/ }),

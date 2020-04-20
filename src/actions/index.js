@@ -199,7 +199,6 @@ export const updateInvoiceItem = (invoiceId, invoiceItemId, newQuantity) => {
 };
 
 export const updateInvoiceItemSuccessful = (updatedItem) => {
-  debugger;
   return {
     type: types.UPDATE_INVOICE_ITEMS_QUANTITY_SUCCESSFUL,
     payload: updatedItem,
