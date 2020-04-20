@@ -5838,7 +5838,7 @@ call.bind(null, __WEBPACK_IMPORTED_MODULE_3__redux_saga_delay_p__["a" /* default
 
 
 Object.defineProperty(exports, "__esModule", {
-    value: true
+  value: true
 });
 exports.callRecalculateTotal = callRecalculateTotal;
 
@@ -5853,34 +5853,40 @@ var _index = __webpack_require__(6);
 var _marked = /*#__PURE__*/regeneratorRuntime.mark(callRecalculateTotal);
 
 function callRecalculateTotal() {
-    var state, _state$InvoiceDetails, invoiceItems, products, invoice, discount;
+  var state, _state$InvoiceDetails, invoiceItems, products, discount, state2, invoice2;
 
-    return regeneratorRuntime.wrap(function callRecalculateTotal$(_context) {
-        while (1) {
-            switch (_context.prev = _context.next) {
-                case 0:
-                    _context.next = 2;
-                    return (0, _effects.select)();
+  return regeneratorRuntime.wrap(function callRecalculateTotal$(_context) {
+    while (1) {
+      switch (_context.prev = _context.next) {
+        case 0:
+          _context.next = 2;
+          return (0, _effects.select)();
 
-                case 2:
-                    state = _context.sent;
-                    _state$InvoiceDetails = state.InvoiceDetails, invoiceItems = _state$InvoiceDetails.invoiceItems, products = _state$InvoiceDetails.products, invoice = _state$InvoiceDetails.invoice, discount = _state$InvoiceDetails.invoice.discount;
-                    _context.next = 6;
-                    return (0, _effects.put)({
-                        type: _types.RECALCULATE_TOTAL,
-                        payload: { invoiceItems: invoiceItems, products: products, discount: discount }
-                    });
+        case 2:
+          state = _context.sent;
+          _state$InvoiceDetails = state.InvoiceDetails, invoiceItems = _state$InvoiceDetails.invoiceItems, products = _state$InvoiceDetails.products, discount = _state$InvoiceDetails.invoice.discount;
+          _context.next = 6;
+          return (0, _effects.put)({
+            type: _types.RECALCULATE_TOTAL,
+            payload: { invoiceItems: invoiceItems, products: products, discount: discount }
+          });
 
-                case 6:
-                    _context.next = 8;
-                    return (0, _effects.put)((0, _index.pushInvoice)(invoice));
+        case 6:
+          _context.next = 8;
+          return (0, _effects.select)();
 
-                case 8:
-                case 'end':
-                    return _context.stop();
-            }
-        }
-    }, _marked, this);
+        case 8:
+          state2 = _context.sent;
+          invoice2 = state2.InvoiceDetails.invoice;
+          _context.next = 12;
+          return (0, _effects.put)((0, _index.pushInvoice)(invoice2));
+
+        case 12:
+        case 'end':
+          return _context.stop();
+      }
+    }
+  }, _marked, this);
 }
 
 /***/ }),
@@ -49644,6 +49650,8 @@ var _types = __webpack_require__(3);
 
 var _index = __webpack_require__(6);
 
+var _InvoicesSagas = __webpack_require__(72);
+
 var _config = __webpack_require__(9);
 
 var _config2 = _interopRequireDefault(_config);
@@ -49678,9 +49686,10 @@ var pushInvoiceApi = function pushInvoiceApi(_ref) {
 };
 
 var updateInvoiceApi = function updateInvoiceApi(_ref2) {
-  var customer_id = _ref2.customer_id,
+  var id = _ref2.id,
+      customer_id = _ref2.customer_id,
       discount = _ref2.discount,
-      sum = _ref2.sum;
+      total = _ref2.total;
 
   return new Promise(function (resolve, reject) {
     _axios2.default.defaults.headers = {
@@ -49688,10 +49697,10 @@ var updateInvoiceApi = function updateInvoiceApi(_ref2) {
       'Content-Type': 'application/json'
     };
 
-    _axios2.default.put(_config2.default.SERVER_URI + '/invoices/' + invoice.id, {
+    _axios2.default.put(_config2.default.SERVER_URI + '/invoices/' + id, {
       customer_id: customer_id,
       discount: discount,
-      total: sum
+      total: total
     }).then(function (response) {
       return resolve(response);
     }).catch(function (error) {
@@ -49718,14 +49727,13 @@ function watchCreateInvoice() {
 }
 
 function callPushInvoice(action) {
-  var _invoice, id, response;
-
+  var invoice, id, response;
   return regeneratorRuntime.wrap(function callPushInvoice$(_context2) {
     while (1) {
       switch (_context2.prev = _context2.next) {
         case 0:
           _context2.prev = 0;
-          _invoice = action.payload, id = _invoice.id;
+          invoice = action.payload, id = invoice.id;
           response = void 0;
 
           if (!id) {
@@ -49734,7 +49742,7 @@ function callPushInvoice(action) {
           }
 
           _context2.next = 6;
-          return (0, _effects.call)(updateInvoiceApi, _invoice);
+          return (0, _effects.call)(updateInvoiceApi, invoice);
 
         case 6:
           response = _context2.sent;
@@ -49743,7 +49751,7 @@ function callPushInvoice(action) {
 
         case 9:
           _context2.next = 11;
-          return (0, _effects.call)(pushInvoiceApi, _invoice);
+          return (0, _effects.call)(pushInvoiceApi, invoice);
 
         case 11:
           response = _context2.sent;
@@ -49753,21 +49761,25 @@ function callPushInvoice(action) {
           return (0, _effects.put)((0, _index.createUpdateInvoiceSuccessful)(response.data));
 
         case 14:
-          _context2.next = 19;
-          break;
+          _context2.next = 16;
+          return (0, _effects.call)(_InvoicesSagas.callFetchInvoices);
 
         case 16:
-          _context2.prev = 16;
+          _context2.next = 21;
+          break;
+
+        case 18:
+          _context2.prev = 18;
           _context2.t0 = _context2['catch'](0);
 
           console.error('----------- push invoice error', _context2.t0);
 
-        case 19:
+        case 21:
         case 'end':
           return _context2.stop();
       }
     }
-  }, _marked2, this, [[0, 16]]);
+  }, _marked2, this, [[0, 18]]);
 }
 
 /***/ }),

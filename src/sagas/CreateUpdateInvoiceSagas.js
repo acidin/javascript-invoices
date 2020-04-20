@@ -1,8 +1,10 @@
 import 'regenerator-runtime/runtime';
 import axios from 'axios';
 import { call, put, takeLatest } from 'redux-saga/effects';
+
 import { PUSH_INVOICE } from '../actions/types';
 import { createUpdateInvoiceSuccessful } from '../actions/index';
+import { callFetchInvoices } from './InvoicesSagas';
 import config from '../config.json';
 
 // move to the separate api folder
@@ -24,7 +26,7 @@ const pushInvoiceApi = ({ customer_id, discount, sum }) => {
   });
 };
 
-const updateInvoiceApi = ({ customer_id, discount, sum }) => {
+const updateInvoiceApi = ({ id, customer_id, discount, total }) => {
   return new Promise((resolve, reject) => {
     axios.defaults.headers = {
       Accept: 'application/json',
@@ -32,10 +34,10 @@ const updateInvoiceApi = ({ customer_id, discount, sum }) => {
     };
 
     axios
-      .put(`${config.SERVER_URI}/invoices/${invoice.id}`, {
+      .put(`${config.SERVER_URI}/invoices/${id}`, {
         customer_id,
         discount,
-        total: sum,
+        total,
       })
       .then((response) => resolve(response))
       .catch((error) => reject(error.response.status));
@@ -61,6 +63,7 @@ function* callPushInvoice(action) {
     }
 
     yield put(createUpdateInvoiceSuccessful(response.data));
+    yield call(callFetchInvoices);
   } catch (error) {
     console.error('----------- push invoice error', error);
   }
